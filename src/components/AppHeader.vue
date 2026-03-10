@@ -1,6 +1,6 @@
 <template>
   <v-app-bar color="primary" dark>
-    <v-app-bar-title>Banco de Anchoas</v-app-bar-title>
+    <v-app-bar-title>{{ t('app.name') }}</v-app-bar-title>
     <v-spacer></v-spacer>
     <v-menu>
       <template #activator="{ props }">
@@ -10,7 +10,7 @@
       </template>
       <v-list>
         <v-list-item @click="handleLogout">
-          <v-list-item-title>Salir</v-list-item-title>
+          <v-list-item-title>{{ t('auth.logout') }}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-menu>
@@ -18,9 +18,11 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/features/auth/stores/auth.store'
 
+const { t } = useI18n()
 const router = useRouter()
 const auth = useAuthStore()
 

@@ -1,3 +1,5 @@
+import { useI18n } from 'vue-i18n'
+
 /**
  * Valida que un email sea válido
  */
@@ -21,7 +23,7 @@ export function isRequired(value: string): boolean {
 }
 
 /**
- * Reglas de validación para formularios
+ * Reglas de validación para formularios (legacy, sin i18n)
  */
 export const formValidationRules = {
   email: [
@@ -33,4 +35,23 @@ export const formValidationRules = {
     (v: string) => isValidPassword(v) || 'Contraseña debe tener al menos 8 caracteres',
   ],
   required: [(v: string) => isRequired(v) || 'Este campo es requerido'],
+}
+
+/**
+ * Reglas de validación con i18n (composable)
+ */
+export function useValidationRules() {
+  const { t } = useI18n()
+
+  return {
+    email: [
+      (v: string) => !!v || t('validation.emailRequired'),
+      (v: string) => isValidEmail(v) || t('validation.emailInvalid'),
+    ],
+    password: [
+      (v: string) => !!v || t('validation.passwordRequired'),
+      (v: string) => isValidPassword(v) || t('validation.passwordMinLength'),
+    ],
+    required: [(v: string) => isRequired(v) || t('validation.fieldRequired')],
+  }
 }

@@ -3,7 +3,7 @@
     <AppHeader />
     <v-main>
       <AppSidebar />
-      <router-view />
+      <slot />
     </v-main>
     <AppFooter />
   </v-app>
