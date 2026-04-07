@@ -1,8 +1,17 @@
-export interface User {
-  id: number
+import type { UserRole } from '@/types/api.types'
+
+export interface UserInfo {
+  id: string
   email: string
   name: string
-  role: 'admin' | 'user'
+  role: UserRole
+}
+
+export interface UserProfile {
+  id: string
+  email: string
+  name: string
+  role: UserRole
 }
 
 export interface LoginRequest {
@@ -12,5 +21,5 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string
-  user: User
+  user: UserInfo
 }
