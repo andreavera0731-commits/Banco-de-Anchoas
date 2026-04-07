@@ -17,23 +17,23 @@ describe('auth store', () => {
   it('sets session correctly', () => {
     const auth = useAuthStore()
     auth.setSession('test-token', {
-      id: 1,
+      id: 'guid-123',
       email: 'a@b.com',
       name: 'Test',
-      role: 'user',
+      role: 'Almacenista',
     })
     expect(auth.isAuthenticated).toBe(true)
-    expect(auth.userRole).toBe('user')
+    expect(auth.userRole).toBe('Almacenista')
     expect(auth.user?.email).toBe('a@b.com')
   })
 
   it('logs out correctly', () => {
     const auth = useAuthStore()
     auth.setSession('test-token', {
-      id: 1,
+      id: 'guid-123',
       email: 'a@b.com',
       name: 'Test',
-      role: 'user',
+      role: 'Almacenista',
     })
     expect(auth.isAuthenticated).toBe(true)
 
@@ -45,12 +45,12 @@ describe('auth store', () => {
   it('checks role correctly', () => {
     const auth = useAuthStore()
     auth.setSession('test-token', {
-      id: 1,
+      id: 'guid-456',
       email: 'a@b.com',
       name: 'Test',
-      role: 'admin',
+      role: 'Admin',
     })
-    expect(auth.hasRole('admin')).toBe(true)
-    expect(auth.hasRole('user')).toBe(false)
+    expect(auth.hasRole('Admin')).toBe(true)
+    expect(auth.hasRole('Almacenista')).toBe(false)
   })
 })

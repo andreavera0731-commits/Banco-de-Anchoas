@@ -1,6 +1,8 @@
 import axios from 'axios'
+import type { AxiosError } from 'axios'
 import { useAuthStore } from '@/features/auth/stores/auth.store'
 import router from '@/router'
+import type { ErrorResponse } from '@/types/api.types'
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api',
@@ -19,7 +21,7 @@ api.interceptors.request.use((config) => {
 // Interceptor: maneja 401 (token expirado)
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  (error: AxiosError<ErrorResponse>) => {
     if (error.response?.status === 401) {
       const auth = useAuthStore()
       auth.logout()

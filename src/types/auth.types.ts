@@ -1,8 +1,15 @@
-export interface User {
-  id: number
+export interface UserInfo {
+  id: string
   email: string
   name: string
-  role: 'admin' | 'user'
+  role: string
+}
+
+export interface UserProfile {
+  id: string
+  email: string
+  name: string
+  role: string
 }
 
 export interface LoginRequest {
@@ -12,5 +19,5 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string
-  user: User
+  user: UserInfo
 }

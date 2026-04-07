@@ -13,7 +13,8 @@ export function useAuth() {
     error.value = null
     try {
       const response = await authService.login(credentials)
-      auth.setSession(response.data.token, response.data.user)
+      const { token, user } = response.data.data
+      auth.setSession(token, user)
       return true
     } catch (err: any) {
       error.value = err.response?.data?.message || 'Error al iniciar sesión'
