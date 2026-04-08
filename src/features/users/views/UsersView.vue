@@ -45,9 +45,6 @@
           <template #empty>
             <v-icon icon="mdi-account-group-outline" size="48" class="mb-3 text-medium-emphasis" />
             <p class="text-body-1 text-medium-emphasis">{{ t('users.noUsers') }}</p>
-            <v-btn color="primary" variant="tonal" prepend-icon="mdi-plus" class="mt-4" @click="openCreate">
-              {{ t('users.createUser') }}
-            </v-btn>
           </template>
 
           <template #item.role="{ item }">
