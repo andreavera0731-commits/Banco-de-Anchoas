@@ -84,8 +84,9 @@ const promoTitleLines = computed(() => t('promo.title').split('\n'))
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 48px 40px;
-  background-color: #faf8f5;
+  padding: var(--bda-space-12) var(--bda-space-10);
+  background-color: rgb(var(--v-theme-background));
+  transition: background-color var(--bda-transition-base);
 }
 
 .login-left-content {
@@ -100,10 +101,10 @@ const promoTitleLines = computed(() => t('promo.title').split('\n'))
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 64px 56px;
+  padding: var(--bda-space-16) 56px;
   position: relative;
   overflow: hidden;
-  border-radius: 24px 0 0 24px;
+  border-radius: var(--bda-radius-2xl) 0 0 var(--bda-radius-2xl);
 }
 
 .login-right::before {
@@ -136,7 +137,7 @@ const promoTitleLines = computed(() => t('promo.title').split('\n'))
   max-width: 440px;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: var(--bda-space-6);
 }
 
 /* Icon */
@@ -146,7 +147,7 @@ const promoTitleLines = computed(() => t('promo.title').split('\n'))
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 20px;
+  border-radius: var(--bda-radius-xl);
   background: rgba(184, 134, 11, 0.1);
   border: 1px solid rgba(184, 134, 11, 0.15);
 }
@@ -157,7 +158,7 @@ const promoTitleLines = computed(() => t('promo.title').split('\n'))
 
 .promo-title {
   font-size: 1.85rem;
-  font-weight: 800;
+  font-weight: var(--bda-font-weight-extrabold);
   color: #fff;
   letter-spacing: -0.03em;
   line-height: 1.2;
@@ -173,33 +174,45 @@ const promoTitleLines = computed(() => t('promo.title').split('\n'))
 .feature-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: var(--bda-space-3);
 }
 
 .feature-pill {
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  border-radius: 20px;
+  gap: var(--bda-space-2);
+  padding: var(--bda-space-2) 14px;
+  border-radius: var(--bda-radius-pill);
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: rgba(255, 255, 255, 0.7);
-  font-size: 0.78rem;
-  font-weight: 500;
+  font-size: var(--bda-font-caption);
+  font-weight: var(--bda-font-weight-medium);
   letter-spacing: 0.01em;
+  transition: all var(--bda-transition-fast);
+}
+
+.feature-pill:hover {
+  background: rgba(184, 134, 11, 0.12);
+  border-color: rgba(184, 134, 11, 0.25);
+  color: #d4a84b;
 }
 
 /* Promo card */
 .promo-card {
   background: rgba(184, 134, 11, 0.07);
   border: 1px solid rgba(184, 134, 11, 0.15);
-  border-radius: 16px;
-  padding: 20px 24px;
+  border-radius: var(--bda-radius-xl);
+  padding: var(--bda-space-5) var(--bda-space-6);
   display: flex;
-  gap: 16px;
+  gap: var(--bda-space-4);
   align-items: flex-start;
   backdrop-filter: blur(10px);
+  transition: border-color var(--bda-transition-fast);
+}
+
+.promo-card:hover {
+  border-color: rgba(184, 134, 11, 0.3);
 }
 
 .promo-card-icon {
@@ -215,14 +228,14 @@ const promoTitleLines = computed(() => t('promo.title').split('\n'))
 
 .promo-card-title {
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: var(--bda-font-weight-bold);
   color: #fff;
   line-height: 1.3;
-  margin-bottom: 6px;
+  margin-bottom: var(--bda-space-2);
 }
 
 .promo-card-text {
-  font-size: 0.78rem;
+  font-size: var(--bda-font-caption);
   color: rgba(255, 255, 255, 0.45);
   line-height: 1.5;
 }
@@ -230,7 +243,7 @@ const promoTitleLines = computed(() => t('promo.title').split('\n'))
 /* Responsive */
 @media (max-width: 960px) {
   .login-left {
-    padding: 32px 24px;
+    padding: var(--bda-space-8) var(--bda-space-6);
   }
 
   .login-right {

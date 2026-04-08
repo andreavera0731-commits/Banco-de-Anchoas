@@ -1,27 +1,169 @@
 @import './base.css';
 
+/* ============================================================
+   App Shell
+   ============================================================ */
+
 #app {
   width: 100%;
   min-height: 100vh;
 }
 
-a,
-.green {
+/* ============================================================
+   Global Link Styles
+   ============================================================ */
+
+a {
+  color: rgb(var(--v-theme-primary));
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+  transition: color var(--bda-transition-fast);
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+a:hover {
+  text-decoration: underline;
 }
 
-@media (min-width: 1024px) {
-  #app {
-    display: flex;
-    flex-direction: column;
-  }
+a.v-list-item:hover {
+  text-decoration: none;
+}
+
+/* ============================================================
+   Scrollbar (subtle, branded)
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bda-border-color);
+  border-radius: var(--bda-radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bda-border-hover);
+}
+
+/* ============================================================
+   Page transition animations
+   ============================================================ */
+
+.page-enter-active,
+.page-leave-active {
+  transition:
+    opacity var(--bda-transition-fast),
+    transform var(--bda-transition-fast);
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+
+/* ============================================================
+   Stagger fade-in for lists / cards
+   ============================================================ */
+
+.stagger-enter-active {
+  transition:
+    opacity var(--bda-transition-base),
+    transform var(--bda-transition-base);
+}
+
+.stagger-enter-from {
+  opacity: 0;
+  transform: translateY(12px);
+}
+
+/* ============================================================
+   Slide-right transition (sidebar, drawers)
+   ============================================================ */
+
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: transform var(--bda-transition-base);
+}
+
+.slide-right-enter-from,
+.slide-right-leave-to {
+  transform: translateX(-100%);
+}
+
+/* ============================================================
+   Toast / notification slide-in
+   ============================================================ */
+
+.toast-enter-active {
+  transition:
+    opacity var(--bda-transition-base),
+    transform var(--bda-transition-spring);
+}
+
+.toast-leave-active {
+  transition:
+    opacity var(--bda-transition-fast),
+    transform var(--bda-transition-fast);
+}
+
+.toast-enter-from {
+  opacity: 0;
+  transform: translateY(-16px) scale(0.95);
+}
+
+.toast-leave-to {
+  opacity: 0;
+  transform: translateY(-8px);
+}
+
+/* ============================================================
+   Global utility classes
+   ============================================================ */
+
+.bda-card-hover {
+  transition:
+    box-shadow var(--bda-transition-fast),
+    transform var(--bda-transition-fast);
+}
+
+.bda-card-hover:hover {
+  box-shadow: var(--bda-shadow-md);
+  transform: translateY(-2px);
+}
+
+.bda-gradient-text {
+  background: var(--bda-gradient-primary);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bda-gradient-btn {
+  background: var(--bda-gradient-primary) !important;
+  color: var(--bda-text-on-primary) !important;
+  font-weight: var(--bda-font-weight-semibold);
+  box-shadow: 0 4px 16px rgba(184, 134, 11, 0.25);
+  transition: all var(--bda-transition-fast);
+}
+
+.bda-gradient-btn:hover {
+  background: var(--bda-gradient-primary-hover) !important;
+  box-shadow: 0 6px 20px rgba(184, 134, 11, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Truncate text utility */
+.bda-truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }

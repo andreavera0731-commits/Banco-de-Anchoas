@@ -1,85 +1,122 @@
-/* color palette from <https://github.com/vuejs/theme> */
+/* ============================================================
+   BANCO DE ANCHOAS — Design Tokens
+   ============================================================ */
+
+/* --- Brand tokens (theme-independent) --- */
 :root {
-  --vt-c-white: #ffffff;
-  --vt-c-white-soft: #f8f8f8;
-  --vt-c-white-mute: #f2f2f2;
+  /* Typography */
+  --bda-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bda-font-display: 2rem;
+  --bda-font-h1: 1.5rem;
+  --bda-font-h2: 1.25rem;
+  --bda-font-h3: 1.1rem;
+  --bda-font-body: 0.875rem;
+  --bda-font-caption: 0.75rem;
+  --bda-font-weight-normal: 400;
+  --bda-font-weight-medium: 500;
+  --bda-font-weight-semibold: 600;
+  --bda-font-weight-bold: 700;
+  --bda-font-weight-extrabold: 800;
 
-  --vt-c-black: #181818;
-  --vt-c-black-soft: #222222;
-  --vt-c-black-mute: #282828;
+  /* Radii */
+  --bda-radius-sm: 6px;
+  --bda-radius-md: 8px;
+  --bda-radius-lg: 12px;
+  --bda-radius-xl: 16px;
+  --bda-radius-2xl: 24px;
+  --bda-radius-pill: 9999px;
 
-  --vt-c-indigo: #2c3e50;
+  /* Spacing scale */
+  --bda-space-1: 4px;
+  --bda-space-2: 8px;
+  --bda-space-3: 12px;
+  --bda-space-4: 16px;
+  --bda-space-5: 20px;
+  --bda-space-6: 24px;
+  --bda-space-8: 32px;
+  --bda-space-10: 40px;
+  --bda-space-12: 48px;
+  --bda-space-16: 64px;
 
-  --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
-  --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
-  --vt-c-divider-dark-1: rgba(84, 84, 84, 0.65);
-  --vt-c-divider-dark-2: rgba(84, 84, 84, 0.48);
+  /* Transitions */
+  --bda-transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --bda-transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --bda-transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  --bda-transition-spring: 500ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
-  --vt-c-text-light-1: var(--vt-c-indigo);
-  --vt-c-text-light-2: rgba(60, 60, 60, 0.66);
-  --vt-c-text-dark-1: var(--vt-c-white);
-  --vt-c-text-dark-2: rgba(235, 235, 235, 0.64);
+  /* Z-index scale */
+  --bda-z-drawer: 100;
+  --bda-z-appbar: 200;
+  --bda-z-modal: 300;
+  --bda-z-toast: 400;
+
+  /* Touch targets */
+  --bda-touch-min: 44px;
 }
 
-/* semantic color variables for this project */
-:root {
-  --color-background: var(--vt-c-white);
-  --color-background-soft: var(--vt-c-white-soft);
-  --color-background-mute: var(--vt-c-white-mute);
+/* --- Light theme tokens --- */
+:root,
+.v-theme--light {
+  --bda-text-primary: #1a1a2e;
+  --bda-text-secondary: rgba(26, 26, 46, 0.65);
+  --bda-text-disabled: rgba(26, 26, 46, 0.38);
+  --bda-text-on-dark: #ffffff;
+  --bda-text-on-primary: #1a1a1a;
 
-  --color-border: var(--vt-c-divider-light-2);
-  --color-border-hover: var(--vt-c-divider-light-1);
+  --bda-border-color: rgba(26, 26, 46, 0.12);
+  --bda-border-hover: rgba(26, 26, 46, 0.24);
 
-  --color-heading: var(--vt-c-text-light-1);
-  --color-text: var(--vt-c-text-light-1);
+  --bda-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --bda-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --bda-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
 
-  --section-gap: 160px;
+  --bda-gradient-primary: linear-gradient(135deg, #b8860b, #d4a84b);
+  --bda-gradient-primary-hover: linear-gradient(135deg, #9a7209, #b8860b);
+  --bda-gradient-surface: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+
+  --bda-overlay-light: rgba(255, 255, 255, 0.8);
+  --bda-surface-elevated: #ffffff;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: var(--vt-c-black);
-    --color-background-soft: var(--vt-c-black-soft);
-    --color-background-mute: var(--vt-c-black-mute);
+/* --- Dark theme tokens --- */
+.v-theme--dark {
+  --bda-text-primary: #e0e0e0;
+  --bda-text-secondary: rgba(224, 224, 224, 0.65);
+  --bda-text-disabled: rgba(224, 224, 224, 0.38);
+  --bda-text-on-dark: #e0e0e0;
+  --bda-text-on-primary: #1a1a1a;
 
-    --color-border: var(--vt-c-divider-dark-2);
-    --color-border-hover: var(--vt-c-divider-dark-1);
+  --bda-border-color: rgba(255, 255, 255, 0.1);
+  --bda-border-hover: rgba(255, 255, 255, 0.2);
 
-    --color-heading: var(--vt-c-text-dark-1);
-    --color-text: var(--vt-c-text-dark-2);
-  }
+  --bda-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.15);
+  --bda-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.35), 0 2px 4px rgba(0, 0, 0, 0.2);
+  --bda-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.45), 0 4px 8px rgba(0, 0, 0, 0.25);
+
+  --bda-gradient-primary: linear-gradient(135deg, #d4a84b, #f0c96e);
+  --bda-gradient-primary-hover: linear-gradient(135deg, #b8860b, #d4a84b);
+  --bda-gradient-surface: linear-gradient(135deg, #1e1e2e 0%, #2a2a3e 100%);
+
+  --bda-overlay-light: rgba(30, 30, 46, 0.8);
+  --bda-surface-elevated: #252538;
 }
+
+/* ============================================================
+   Global Reset & Base
+   ============================================================ */
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
   margin: 0;
-  font-weight: normal;
 }
 
 body {
   min-height: 100vh;
-  color: var(--color-text);
-  background: var(--color-background);
-  transition:
-    color 0.5s,
-    background-color 0.5s;
+  font-family: var(--bda-font-family);
+  font-size: var(--bda-font-body);
   line-height: 1.6;
-  font-family:
-    Inter,
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    Oxygen,
-    Ubuntu,
-    Cantarell,
-    'Fira Sans',
-    'Droid Sans',
-    'Helvetica Neue',
-    sans-serif;
-  font-size: 15px;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

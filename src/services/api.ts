@@ -5,7 +5,7 @@ import router from '@/router'
 import type { ErrorResponse } from '@/types/api.types'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5001/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5128/api',
   headers: { 'Content-Type': 'application/json' },
 })
 

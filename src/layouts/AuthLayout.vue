@@ -6,7 +6,16 @@
   </v-app>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { onMounted } from 'vue'
+import { useThemeToggle } from '@/composables/useTheme'
+
+const { init: initTheme } = useThemeToggle()
+
+onMounted(() => {
+  initTheme()
+})
+</script>
 
 <style scoped>
 .auth-main {

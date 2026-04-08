@@ -3,7 +3,7 @@
     <!-- Header -->
     <div class="login-header">
       <div class="login-logo">
-        <v-icon icon="mdi-package-variant-closed" size="34" color="#b8860b" />
+        <v-icon icon="mdi-package-variant-closed" size="34" color="primary" />
         <span class="logo-text">{{ t('app.name') }}</span>
       </div>
       <button type="button" class="lang-toggle" @click="toggleLocale">
@@ -26,10 +26,7 @@
           :placeholder="t('auth.emailPlaceholder')"
           type="email"
           :rules="validators.email"
-          variant="outlined"
-          density="comfortable"
           prepend-inner-icon="mdi-email-outline"
-          hide-details="auto"
           required
         />
       </div>
@@ -43,11 +40,8 @@
           :placeholder="t('auth.passwordPlaceholder')"
           :type="showPassword ? 'text' : 'password'"
           :rules="validators.password"
-          variant="outlined"
-          density="comfortable"
           prepend-inner-icon="mdi-lock-outline"
           :append-inner-icon="showPassword ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
-          hide-details="auto"
           required
           @click:append-inner="showPassword = !showPassword"
         />
@@ -60,6 +54,7 @@
           :label="t('auth.rememberMe')"
           density="compact"
           hide-details
+          color="primary"
           class="remember-checkbox"
         />
         <a href="#" class="forgot-link">{{ t('auth.forgotPassword') }}</a>
@@ -69,7 +64,6 @@
       <v-alert
         v-if="error"
         type="error"
-        variant="tonal"
         density="compact"
         class="error-alert"
         closable
@@ -84,8 +78,7 @@
         block
         size="large"
         :loading="isLoading"
-        class="login-btn"
-        rounded="lg"
+        class="login-btn bda-gradient-btn"
       >
         {{ t('auth.signIn') }}
       </v-btn>
@@ -103,65 +96,64 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 40px;
+  margin-bottom: var(--bda-space-10);
 }
 
 .login-logo {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 0;
+  gap: var(--bda-space-3);
 }
 
 .logo-text {
   font-size: 1.05rem;
-  font-weight: 700;
+  font-weight: var(--bda-font-weight-bold);
   letter-spacing: -0.01em;
-  color: #1a1a1a;
+  color: var(--bda-text-primary);
 }
 
 .lang-toggle {
-  font-size: 0.78rem;
-  font-weight: 600;
-  color: #888;
+  font-size: var(--bda-font-caption);
+  font-weight: var(--bda-font-weight-semibold);
+  color: var(--bda-text-secondary);
   background: transparent;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 4px 12px;
+  border: 1px solid var(--bda-border-color);
+  border-radius: var(--bda-radius-sm);
+  padding: var(--bda-space-1) var(--bda-space-3);
   cursor: pointer;
   letter-spacing: 0.04em;
-  transition: all 0.2s;
+  transition: all var(--bda-transition-fast);
 }
 
 .lang-toggle:hover {
-  color: #b8860b;
-  border-color: #b8860b;
+  color: rgb(var(--v-theme-primary));
+  border-color: rgb(var(--v-theme-primary));
 }
 
 .login-heading {
   font-size: 1.75rem;
-  font-weight: 800;
-  color: #1a1a1a;
+  font-weight: var(--bda-font-weight-extrabold);
+  color: var(--bda-text-primary);
   letter-spacing: -0.03em;
-  margin-bottom: 6px;
+  margin-bottom: var(--bda-space-2);
 }
 
 .login-subheading {
-  font-size: 0.875rem;
-  color: #888;
-  margin-bottom: 32px;
+  font-size: var(--bda-font-body);
+  color: var(--bda-text-secondary);
+  margin-bottom: var(--bda-space-8);
 }
 
 .field-group {
-  margin-bottom: 20px;
+  margin-bottom: var(--bda-space-5);
 }
 
 .field-label {
   display: block;
   font-size: 0.8rem;
-  font-weight: 600;
-  color: #444;
-  margin-bottom: 6px;
+  font-weight: var(--bda-font-weight-semibold);
+  color: var(--bda-text-primary);
+  margin-bottom: var(--bda-space-2);
   letter-spacing: 0.01em;
 }
 
@@ -169,48 +161,35 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: var(--bda-space-6);
 }
 
 .remember-checkbox :deep(.v-label) {
   font-size: 0.825rem;
-  color: #666;
+  color: var(--bda-text-secondary);
 }
 
 .forgot-link {
   font-size: 0.8rem;
-  font-weight: 500;
-  color: #b8860b;
+  font-weight: var(--bda-font-weight-medium);
+  color: rgb(var(--v-theme-primary));
   text-decoration: none;
-  transition: color 0.2s;
+  transition: color var(--bda-transition-fast);
   white-space: nowrap;
 }
 
 .forgot-link:hover {
-  color: #d4a84b;
+  opacity: 0.8;
   text-decoration: underline;
 }
 
 .error-alert {
-  margin-bottom: 20px;
+  margin-bottom: var(--bda-space-5);
 }
 
 .login-btn {
-  background: linear-gradient(135deg, #b8860b, #d4a84b) !important;
-  color: #1a1a1a !important;
-  font-weight: 600;
-  text-transform: none;
-  letter-spacing: 0;
   font-size: 0.95rem;
   height: 48px !important;
-  box-shadow: 0 4px 16px rgba(184, 134, 11, 0.25);
-  transition: all 0.25s ease;
-}
-
-.login-btn:hover {
-  background: linear-gradient(135deg, #9a7209, #b8860b) !important;
-  box-shadow: 0 6px 20px rgba(184, 134, 11, 0.35);
-  transform: translateY(-1px);
 }
 </style>
 
