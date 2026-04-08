@@ -59,8 +59,9 @@ export function truncate(str: string, maxLength: number): string {
 
 /**
  * Calcula tiempo relativo (ej: hace 2 horas)
+ * Requires a t() function from vue-i18n for localized output.
  */
-export function formatRelativeTime(date: string | Date): string {
+export function formatRelativeTime(date: string | Date, t: (key: string, count?: number) => string): string {
   const d = new Date(date)
   const now = new Date()
   const diffMs = now.getTime() - d.getTime()
@@ -69,10 +70,10 @@ export function formatRelativeTime(date: string | Date): string {
   const diffHours = Math.round(diffMins / 60)
   const diffDays = Math.round(diffHours / 24)
 
-  if (diffSecs < 60) return 'hace unos segundos'
-  if (diffMins < 60) return `hace ${diffMins} minuto${diffMins > 1 ? 's' : ''}`
-  if (diffHours < 24) return `hace ${diffHours} hora${diffHours > 1 ? 's' : ''}`
-  if (diffDays < 7) return `hace ${diffDays} día${diffDays > 1 ? 's' : ''}`
+  if (diffSecs < 60) return t('relativeTime.justNow')
+  if (diffMins < 60) return t('relativeTime.minutesAgo', diffMins)
+  if (diffHours < 24) return t('relativeTime.hoursAgo', diffHours)
+  if (diffDays < 7) return t('relativeTime.daysAgo', diffDays)
   
   return formatDate(d)
 }

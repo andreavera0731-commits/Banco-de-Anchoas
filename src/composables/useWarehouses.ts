@@ -1,8 +1,11 @@
 import { ref } from 'vue'
-import { warehousesService, sectorsService } from '@/services/warehouses.service'
+import { useI18n } from 'vue-i18n'
+import { warehousesService } from '@/services/warehouses.service'
+import { sectorsService } from '@/services/sectors.service'
 import type { WarehouseDto, SectorDto } from '@/types/api.types'
 
 export function useWarehouses() {
+  const { t } = useI18n()
   const warehouses = ref<WarehouseDto[]>([])
   const sectors = ref<SectorDto[]>([])
   const isLoading = ref(false)
@@ -12,10 +15,10 @@ export function useWarehouses() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await warehousesService.getWarehouses()
+      const response = await warehousesService.getAll()
       warehouses.value = response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar almacenes'
+      error.value = err.response?.data?.message || t('errors.loadWarehouses')
     } finally {
       isLoading.value = false
     }
@@ -25,10 +28,10 @@ export function useWarehouses() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await warehousesService.getWarehouse(id)
+      const response = await warehousesService.getById(id)
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar almacén'
+      error.value = err.response?.data?.message || t('errors.loadWarehouse')
     } finally {
       isLoading.value = false
     }
@@ -38,11 +41,11 @@ export function useWarehouses() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await warehousesService.getWarehouseSectors(warehouseId)
+      const response = await warehousesService.getSectors(warehouseId)
       sectors.value = response.data.data
       return sectors.value
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar sectores'
+      error.value = err.response?.data?.message || t('errors.loadSectors')
     } finally {
       isLoading.value = false
     }
@@ -51,14 +54,14 @@ export function useWarehouses() {
   async function createWarehouse(name: string, location?: string) {
     error.value = null
     try {
-      const response = await warehousesService.createWarehouse({
+      const response = await warehousesService.create({
         name,
         location: location || null,
       })
       await fetchWarehouses()
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al crear almacén'
+      error.value = err.response?.data?.message || t('errors.createWarehouse')
       throw err
     }
   }
@@ -66,14 +69,14 @@ export function useWarehouses() {
   async function updateWarehouse(id: number, name: string, location?: string) {
     error.value = null
     try {
-      await warehousesService.updateWarehouse(id, {
+      await warehousesService.update(id, {
         id,
         name,
         location: location || null,
       })
       await fetchWarehouses()
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al actualizar almacén'
+      error.value = err.response?.data?.message || t('errors.updateWarehouse')
       throw err
     }
   }
@@ -81,10 +84,10 @@ export function useWarehouses() {
   async function deleteWarehouse(id: number) {
     error.value = null
     try {
-      await warehousesService.deleteWarehouse(id)
+      await warehousesService.delete(id)
       await fetchWarehouses()
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al eliminar almacén'
+      error.value = err.response?.data?.message || t('errors.deleteWarehouse')
       throw err
     }
   }
@@ -104,6 +107,7 @@ export function useWarehouses() {
 }
 
 export function useSectors() {
+  const { t } = useI18n()
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
@@ -111,10 +115,10 @@ export function useSectors() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await sectorsService.getSector(id)
+      const response = await sectorsService.getById(id)
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar sector'
+      error.value = err.response?.data?.message || t('errors.loadSector')
     } finally {
       isLoading.value = false
     }
@@ -123,9 +127,9 @@ export function useSectors() {
   async function updateSector(id: number, name: string) {
     error.value = null
     try {
-      await sectorsService.updateSector(id, { id, name })
+      await sectorsService.update(id, { id, name })
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al actualizar sector'
+      error.value = err.response?.data?.message || t('errors.updateSector')
       throw err
     }
   }
@@ -133,9 +137,9 @@ export function useSectors() {
   async function deleteSector(id: number) {
     error.value = null
     try {
-      await sectorsService.deleteSector(id)
+      await sectorsService.delete(id)
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al eliminar sector'
+      error.value = err.response?.data?.message || t('errors.deleteSector')
       throw err
     }
   }

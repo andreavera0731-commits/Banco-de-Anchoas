@@ -1,4 +1,5 @@
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { stockService } from '@/services/stock.service'
 import type {
   RegisterMovementRequest,
@@ -10,6 +11,7 @@ import type {
 } from '@/types/api.types'
 
 export function useStock() {
+  const { t } = useI18n()
   const isLoading = ref(false)
   const error = ref<string | null>(null)
   const movements = ref<StockMovementDto[]>([])
@@ -23,7 +25,7 @@ export function useStock() {
       const response = await stockService.registerMovement(data)
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || 'Error al registrar movimiento'
+      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.registerMovement')
       throw err
     } finally {
       isLoading.value = false
@@ -37,7 +39,7 @@ export function useStock() {
       const response = await stockService.registerWriteOff(data)
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || 'Error al registrar baja'
+      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.registerWriteOff')
       throw err
     } finally {
       isLoading.value = false
@@ -48,10 +50,10 @@ export function useStock() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await stockService.registerRelocation(data)
+      const response = await stockService.relocate(data)
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || 'Error al registrar reubicación'
+      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.registerRelocation')
       throw err
     } finally {
       isLoading.value = false
@@ -62,10 +64,10 @@ export function useStock() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await stockService.registerAdjustment(data)
+      const response = await stockService.adjust(data)
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || 'Error al registrar ajuste'
+      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.registerAdjustment')
       throw err
     } finally {
       isLoading.value = false
@@ -76,12 +78,12 @@ export function useStock() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await stockService.getMovementHistory(params)
+      const response = await stockService.getHistory(params)
       movements.value = response.data.data.items
       totalPages.value = response.data.data.totalPages
       currentPage.value = response.data.data.pageNumber
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar historial'
+      error.value = err.response?.data?.message || t('errors.loadHistory')
     } finally {
       isLoading.value = false
     }
@@ -94,7 +96,7 @@ export function useStock() {
       const response = await stockService.getWriteOffs({ reason })
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar bajas'
+      error.value = err.response?.data?.message || t('errors.loadWriteOffs')
     } finally {
       isLoading.value = false
     }

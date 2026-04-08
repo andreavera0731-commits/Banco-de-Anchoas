@@ -1,8 +1,10 @@
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { categoriesService } from '@/services/categories.service'
 import type { CategoryDto } from '@/types/api.types'
 
 export function useCategories() {
+  const { t } = useI18n()
   const categories = ref<CategoryDto[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
@@ -18,10 +20,10 @@ export function useCategories() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await categoriesService.getCategories()
+      const response = await categoriesService.getAll()
       categories.value = response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar categorías'
+      error.value = err.response?.data?.message || t('errors.loadCategories')
     } finally {
       isLoading.value = false
     }
@@ -30,7 +32,7 @@ export function useCategories() {
   async function createCategory(name: string, description?: string) {
     error.value = null
     try {
-      const response = await categoriesService.createCategory({
+      const response = await categoriesService.create({
         name,
         description: description || null,
       })
@@ -38,7 +40,7 @@ export function useCategories() {
       await fetchCategories()
       return newId
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al crear categoría'
+      error.value = err.response?.data?.message || t('errors.createCategory')
       throw err
     }
   }
@@ -46,14 +48,14 @@ export function useCategories() {
   async function updateCategory(id: number, name: string, description?: string) {
     error.value = null
     try {
-      await categoriesService.updateCategory(id, {
+      await categoriesService.update(id, {
         id,
         name,
         description: description || null,
       })
       await fetchCategories()
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al actualizar categoría'
+      error.value = err.response?.data?.message || t('errors.updateCategory')
       throw err
     }
   }
@@ -61,10 +63,10 @@ export function useCategories() {
   async function deleteCategory(id: number) {
     error.value = null
     try {
-      await categoriesService.deleteCategory(id)
+      await categoriesService.delete(id)
       await fetchCategories()
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al eliminar categoría'
+      error.value = err.response?.data?.message || t('errors.deleteCategory')
       throw err
     }
   }

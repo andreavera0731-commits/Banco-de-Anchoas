@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { categoriesService } from '@/services/categories.service'
 import type { CategoryDto } from '@/types/api.types'
 
 export const useCategoriesStore = defineStore('categories', () => {
+  const { t } = useI18n()
   const categories = ref<CategoryDto[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
@@ -21,12 +23,12 @@ export const useCategoriesStore = defineStore('categories', () => {
     isLoading.value = true
     error.value = null
     try {
-      const response = await categoriesService.getCategories()
+      const response = await categoriesService.getAll()
       categories.value = response.data.data
       lastFetch.value = now
       return categories.value
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar categorías'
+      error.value = err.response?.data?.message || t('errors.loadCategories')
       throw err
     } finally {
       isLoading.value = false

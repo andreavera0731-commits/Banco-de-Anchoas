@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { notificationsService } from '@/services/notifications.service'
 import type { NotificationDto } from '@/types/api.types'
 
 export const useNotificationsStore = defineStore('notifications', () => {
+  const { t } = useI18n()
   const notifications = ref<NotificationDto[]>([])
   const unreadCount = ref(0)
   const isLoading = ref(false)
@@ -21,7 +23,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
     isLoading.value = true
     error.value = null
     try {
-      const response = await notificationsService.getNotifications({
+      const response = await notificationsService.getAll({
         isRead,
         pageNumber: pageNumber.value,
         pageSize: pageSize.value,
@@ -30,7 +32,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
       pageNumber.value = response.data.data.pageNumber
       totalPages.value = response.data.data.totalPages
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar notificaciones'
+      error.value = err.response?.data?.message || t('errors.loadNotifications')
     } finally {
       isLoading.value = false
     }
@@ -41,7 +43,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
       const response = await notificationsService.getUnreadCount()
       unreadCount.value = response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar contador'
+      error.value = err.response?.data?.message || t('errors.loadUnreadCount')
     }
   }
 
@@ -57,7 +59,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
         unreadCount.value = Math.max(0, unreadCount.value - 1)
       }
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al marcar como leída'
+      error.value = err.response?.data?.message || t('errors.markAsRead')
     }
   }
 
@@ -73,7 +75,7 @@ export const useNotificationsStore = defineStore('notifications', () => {
       })
       unreadCount.value = 0
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al marcar todas como leídas'
+      error.value = err.response?.data?.message || t('errors.markAllAsRead')
     }
   }
 

@@ -16,43 +16,43 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/products',
     name: 'products',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/features/products/views/ProductsView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
     path: '/products/:id',
     name: 'product-detail',
-    component: () => import('@/views/AboutView.vue'),
+    component: () => import('@/features/products/views/ProductDetailView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
     path: '/stock',
     name: 'stock',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/features/stock/views/StockView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
     path: '/warehouses',
     name: 'warehouses',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/features/warehouses/views/WarehousesView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
     path: '/categories',
     name: 'categories',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/features/categories/views/CategoriesView.vue'),
     meta: { requiresAuth: true, role: 'Admin', layout: 'default' },
   },
   {
     path: '/users',
     name: 'users',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/features/users/views/UsersView.vue'),
     meta: { requiresAuth: true, role: 'Admin', layout: 'default' },
   },
   {
     path: '/notifications',
     name: 'notifications',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/features/notifications/views/NotificationsView.vue'),
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
@@ -64,7 +64,7 @@ export const routes: RouteRecordRaw[] = [
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/views/NotFoundView.vue'),
     meta: { layout: 'default' },
   },
 ]

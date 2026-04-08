@@ -1,9 +1,11 @@
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '../stores/auth.store'
 import { authService } from '../services/auth.service'
 import type { LoginRequest } from '../types/auth.types'
 
 export function useAuth() {
+  const { t } = useI18n()
   const auth = useAuthStore()
   const isLoading = ref(false)
   const error = ref<string | null>(null)
@@ -17,7 +19,7 @@ export function useAuth() {
       auth.setSession(token, user)
       return true
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al iniciar sesión'
+      error.value = err.response?.data?.message || t('auth.loginError')
       return false
     } finally {
       isLoading.value = false

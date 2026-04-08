@@ -23,21 +23,6 @@ export function isRequired(value: string): boolean {
 }
 
 /**
- * Reglas de validación para formularios (legacy, sin i18n)
- */
-export const formValidationRules = {
-  email: [
-    (v: string) => !!v || 'Email es requerido',
-    (v: string) => isValidEmail(v) || 'Email no es válido',
-  ],
-  password: [
-    (v: string) => !!v || 'Contraseña es requerida',
-    (v: string) => isValidPassword(v) || 'Contraseña debe tener al menos 8 caracteres',
-  ],
-  required: [(v: string) => isRequired(v) || 'Este campo es requerido'],
-}
-
-/**
  * Reglas de validación con i18n (composable)
  */
 export function useValidationRules() {

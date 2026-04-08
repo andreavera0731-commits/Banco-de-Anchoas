@@ -14,6 +14,48 @@
         rounded="lg"
         color="primary"
       />
+      <v-list-item
+        :to="{ name: 'products' }"
+        prepend-icon="mdi-package-variant"
+        :title="t('nav.products')"
+        rounded="lg"
+        color="primary"
+      />
+      <v-list-item
+        :to="{ name: 'stock' }"
+        prepend-icon="mdi-swap-horizontal"
+        :title="t('nav.stock')"
+        rounded="lg"
+        color="primary"
+      />
+      <v-list-item
+        :to="{ name: 'warehouses' }"
+        prepend-icon="mdi-warehouse"
+        :title="t('nav.warehouses')"
+        rounded="lg"
+        color="primary"
+      />
+      <v-list-item
+        :to="{ name: 'categories' }"
+        prepend-icon="mdi-tag-multiple-outline"
+        :title="t('nav.categories')"
+        rounded="lg"
+        color="primary"
+      />
+      <v-list-item
+        :to="{ name: 'users' }"
+        prepend-icon="mdi-account-group-outline"
+        :title="t('nav.users')"
+        rounded="lg"
+        color="primary"
+      />
+      <v-list-item
+        :to="{ name: 'notifications' }"
+        prepend-icon="mdi-bell-outline"
+        :title="t('nav.notifications')"
+        rounded="lg"
+        color="primary"
+      />
     </v-list>
   </v-navigation-drawer>
 </template>
@@ -25,26 +67,32 @@ const { t } = useI18n()
 </script>
 
 <style scoped>
-.v-list-item {
+.v-navigation-drawer :deep(.v-list-item) {
   min-height: 40px;
   padding-inline: 8px !important;
   text-decoration: none !important;
   overflow: hidden;
 }
 
-.v-list-item :deep(.v-list-item__content) {
+.v-navigation-drawer :deep(.v-list-item__content) {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
 
-.v-list-item :deep(.v-list-item__prepend) {
+.v-navigation-drawer--is-hovering :deep(.v-list-item__content) {
+  opacity: 1;
+}
+
+.v-navigation-drawer :deep(.v-list-item__prepend) {
   margin-inline-end: 8px !important;
   width: 24px;
   min-width: 24px;
 }
 
-.v-list-item :deep(.v-list-item__prepend .v-icon) {
+.v-navigation-drawer :deep(.v-list-item__prepend .v-icon) {
   margin-inline-end: 0 !important;
 }
 </style>

@@ -16,7 +16,7 @@ export function useThemeToggle() {
     const saved = localStorage.getItem('bda-theme')
     if (saved === 'light' || saved === 'dark') {
       theme.global.name.value = saved
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    } else if (globalThis.matchMedia('(prefers-color-scheme: dark)').matches) {
       theme.global.name.value = 'dark'
     }
   }

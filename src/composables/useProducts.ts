@@ -1,8 +1,10 @@
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { productsService } from '@/services/products.service'
 import type { ProductListDto, ProductDto, GetProductsParams } from '@/types/api.types'
 
 export function useProducts() {
+  const { t } = useI18n()
   const products = ref<ProductListDto[]>([])
   const productDetail = ref<ProductDto | null>(null)
   const isLoading = ref(false)
@@ -23,13 +25,13 @@ export function useProducts() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await productsService.getProducts(params)
+      const response = await productsService.getAll(params)
       products.value = response.data.data.items
       pageNumber.value = response.data.data.pageNumber
       totalCount.value = response.data.data.totalCount
       totalPages.value = response.data.data.totalPages
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar productos'
+      error.value = err.response?.data?.message || t('errors.loadProducts')
     } finally {
       isLoading.value = false
     }
@@ -39,11 +41,11 @@ export function useProducts() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await productsService.getProduct(id)
+      const response = await productsService.getById(id)
       productDetail.value = response.data.data
       return productDetail.value
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar producto'
+      error.value = err.response?.data?.message || t('errors.loadProduct')
     } finally {
       isLoading.value = false
     }
@@ -53,11 +55,11 @@ export function useProducts() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await productsService.getProductByBarcode(barcode)
+      const response = await productsService.getByBarcode(barcode)
       productDetail.value = response.data.data
       return productDetail.value
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Producto no encontrado'
+      error.value = err.response?.data?.message || t('errors.productNotFound')
     } finally {
       isLoading.value = false
     }
@@ -67,10 +69,10 @@ export function useProducts() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await productsService.getLowStockProducts()
+      const response = await productsService.getLowStock()
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar productos con stock bajo'
+      error.value = err.response?.data?.message || t('errors.loadLowStock')
     } finally {
       isLoading.value = false
     }
@@ -80,10 +82,10 @@ export function useProducts() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await productsService.getExpiringProducts()
+      const response = await productsService.getExpiring()
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar productos próximos a vencer'
+      error.value = err.response?.data?.message || t('errors.loadExpiring')
     } finally {
       isLoading.value = false
     }
@@ -92,11 +94,11 @@ export function useProducts() {
   async function createProduct(data: any) {
     error.value = null
     try {
-      const response = await productsService.createProduct(data)
+      const response = await productsService.create(data)
       await fetchProducts()
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || 'Error al crear producto'
+      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.createProduct')
       throw err
     }
   }
@@ -104,10 +106,10 @@ export function useProducts() {
   async function updateProduct(id: number, data: any) {
     error.value = null
     try {
-      await productsService.updateProduct(id, { ...data, id })
+      await productsService.update(id, { ...data, id })
       await fetchProducts()
     } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || 'Error al actualizar producto'
+      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.updateProduct')
       throw err
     }
   }
@@ -115,10 +117,10 @@ export function useProducts() {
   async function deleteProduct(id: number) {
     error.value = null
     try {
-      await productsService.deleteProduct(id)
+      await productsService.delete(id)
       await fetchProducts()
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al eliminar producto'
+      error.value = err.response?.data?.message || t('errors.deleteProduct')
       throw err
     }
   }

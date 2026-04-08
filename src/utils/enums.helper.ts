@@ -1,58 +1,6 @@
-import type {
-  MovementType,
-  AdjustmentType,
-  MovementReason,
-  NotificationType,
-  OrderStatus,
-} from '@/types/api.types'
+import { useI18n } from 'vue-i18n'
 
-// Movement Type Labels
-export const movementTypeLabels: Record<number, string> = {
-  0: 'Entrada',
-  1: 'Salida',
-  2: 'Baja',
-  3: 'Reubicación',
-  4: 'Ajuste',
-}
-
-export function getMovementTypeLabel(type: number): string {
-  return movementTypeLabels[type] || 'Desconocido'
-}
-
-// Adjustment Type Labels
-export const adjustmentTypeLabels: Record<number, string> = {
-  0: 'Incremento',
-  1: 'Decremento',
-}
-
-export function getAdjustmentTypeLabel(type: number): string {
-  return adjustmentTypeLabels[type] || 'Desconocido'
-}
-
-// Movement Reason Labels
-export const movementReasonLabels: Record<number, string> = {
-  0: 'Expiración',
-  1: 'Daño',
-  2: 'Pérdida',
-  3: 'Otro',
-}
-
-export function getMovementReasonLabel(reason: number): string {
-  return movementReasonLabels[reason] || 'Desconocido'
-}
-
-// Notification Type Labels
-export const notificationTypeLabels: Record<number, string> = {
-  0: 'Stock bajo',
-  1: 'Próximo a vencer',
-  2: 'Vencido',
-}
-
-export function getNotificationTypeLabel(type: number): string {
-  return notificationTypeLabels[type] || 'Desconocido'
-}
-
-// Notification Type Colors
+// Notification Type Colors (no i18n needed)
 export const notificationTypeColors: Record<number, string> = {
   0: 'warning',
   1: 'info',
@@ -63,37 +11,50 @@ export function getNotificationTypeColor(type: number): string {
   return notificationTypeColors[type] || 'default'
 }
 
-// Order Status Labels
-export const orderStatusLabels: Record<number, string> = {
-  0: 'Pendiente',
-  1: 'En proceso',
-  2: 'Completado',
-  3: 'Cancelado',
+// Enum key mappings (index → translation key suffix)
+const movementTypeKeys: Record<number, string> = {
+  0: 'entry', 1: 'exit', 2: 'writeOff', 3: 'relocation', 4: 'adjustment',
+}
+const adjustmentTypeKeys: Record<number, string> = {
+  0: 'increment', 1: 'decrement',
+}
+const movementReasonKeys: Record<number, string> = {
+  0: 'expiration', 1: 'damage', 2: 'loss', 3: 'other',
+}
+const notificationTypeKeys: Record<number, string> = {
+  0: 'lowStock', 1: 'expiringSoon', 2: 'expired',
+}
+const orderStatusKeys: Record<number, string> = {
+  0: 'pending', 1: 'inProgress', 2: 'completed', 3: 'cancelled',
+}
+const userRoleKeys: Record<string, string> = {
+  Admin: 'admin', Almacenista: 'warehouseWorker',
+}
+const productUnitKeys: Record<string, string> = {
+  kg: 'kg', g: 'g', un: 'un', lt: 'lt', ml: 'ml',
 }
 
-export function getOrderStatusLabel(status: number): string {
-  return orderStatusLabels[status] || 'Desconocido'
-}
+/**
+ * Composable that provides i18n-aware enum label getters.
+ * Must be called within a component setup or composable context.
+ */
+export function useEnumLabels() {
+  const { t } = useI18n()
 
-// User Role Labels
-export const userRoleLabels: Record<string, string> = {
-  Admin: 'Administrador',
-  Almacenista: 'Almacenista',
-}
-
-export function getUserRoleLabel(role: string): string {
-  return userRoleLabels[role] || 'Desconocido'
-}
-
-// Product Unit Labels
-export const productUnitLabels: Record<string, string> = {
-  kg: 'Kilogramos',
-  g: 'Gramos',
-  un: 'Unidades',
-  lt: 'Litros',
-  ml: 'Mililitros',
-}
-
-export function getProductUnitLabel(unit: string): string {
-  return productUnitLabels[unit] || unit
+  return {
+    getMovementTypeLabel: (type: number) =>
+      movementTypeKeys[type] ? t(`enums.movementType.${movementTypeKeys[type]}`) : t('enums.unknown'),
+    getAdjustmentTypeLabel: (type: number) =>
+      adjustmentTypeKeys[type] ? t(`enums.adjustmentType.${adjustmentTypeKeys[type]}`) : t('enums.unknown'),
+    getMovementReasonLabel: (reason: number) =>
+      movementReasonKeys[reason] ? t(`enums.movementReason.${movementReasonKeys[reason]}`) : t('enums.unknown'),
+    getNotificationTypeLabel: (type: number) =>
+      notificationTypeKeys[type] ? t(`enums.notificationType.${notificationTypeKeys[type]}`) : t('enums.unknown'),
+    getOrderStatusLabel: (status: number) =>
+      orderStatusKeys[status] ? t(`enums.orderStatus.${orderStatusKeys[status]}`) : t('enums.unknown'),
+    getUserRoleLabel: (role: string) =>
+      userRoleKeys[role] ? t(`enums.userRole.${userRoleKeys[role]}`) : t('enums.unknown'),
+    getProductUnitLabel: (unit: string) =>
+      productUnitKeys[unit] ? t(`enums.productUnit.${productUnitKeys[unit]}`) : unit,
+  }
 }

@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { productsService } from '@/services/products.service'
 import type { ProductListDto, ProductDto, GetProductsParams } from '@/types/api.types'
 
 export const useProductsStore = defineStore('products', () => {
+  const { t } = useI18n()
   const products = ref<ProductListDto[]>([])
   const productDetails = ref<Map<number, ProductDto>>(new Map())
   const isLoading = ref(false)
@@ -24,13 +26,13 @@ export const useProductsStore = defineStore('products', () => {
     isLoading.value = true
     error.value = null
     try {
-      const response = await productsService.getProducts(params)
+      const response = await productsService.getAll(params)
       products.value = response.data.data.items
       pageNumber.value = response.data.data.pageNumber
       totalCount.value = response.data.data.totalCount
       totalPages.value = response.data.data.totalPages
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar productos'
+      error.value = err.response?.data?.message || t('errors.loadProducts')
       throw err
     } finally {
       isLoading.value = false
@@ -46,12 +48,12 @@ export const useProductsStore = defineStore('products', () => {
     isLoading.value = true
     error.value = null
     try {
-      const response = await productsService.getProduct(id)
+      const response = await productsService.getById(id)
       const product = response.data.data
       productDetails.value.set(id, product)
       return product
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar producto'
+      error.value = err.response?.data?.message || t('errors.loadProduct')
       throw err
     } finally {
       isLoading.value = false

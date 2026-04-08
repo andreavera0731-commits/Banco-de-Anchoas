@@ -13,7 +13,7 @@
       variant="text"
       size="small"
       @click="toggle"
-      :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'"
+      :aria-label="isDark ? t('a11y.switchToLight') : t('a11y.switchToDark')"
     >
       <v-icon>{{ isDark ? 'mdi-weather-sunny' : 'mdi-weather-night' }}</v-icon>
     </v-btn>

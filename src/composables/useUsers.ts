@@ -1,8 +1,10 @@
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { usersService } from '@/services/users.service'
 import type { UserDto } from '@/types/api.types'
 
 export function useUsers() {
+  const { t } = useI18n()
   const users = ref<UserDto[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
@@ -11,10 +13,10 @@ export function useUsers() {
     isLoading.value = true
     error.value = null
     try {
-      const response = await usersService.getUsers()
+      const response = await usersService.getAll()
       users.value = response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al cargar usuarios'
+      error.value = err.response?.data?.message || t('errors.loadUsers')
     } finally {
       isLoading.value = false
     }
@@ -23,7 +25,7 @@ export function useUsers() {
   async function createUser(email: string, name: string, password: string, role: string) {
     error.value = null
     try {
-      const response = await usersService.createUser({
+      const response = await usersService.create({
         email,
         name,
         password,
@@ -32,7 +34,7 @@ export function useUsers() {
       await fetchUsers()
       return response.data.data
     } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || 'Error al crear usuario'
+      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.createUser')
       throw err
     }
   }
@@ -40,7 +42,7 @@ export function useUsers() {
   async function updateUser(id: string, email?: string, name?: string, role?: string) {
     error.value = null
     try {
-      await usersService.updateUser(id, {
+      await usersService.update(id, {
         id,
         email: email || null,
         name: name || null,
@@ -48,7 +50,7 @@ export function useUsers() {
       })
       await fetchUsers()
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al actualizar usuario'
+      error.value = err.response?.data?.message || t('errors.updateUser')
       throw err
     }
   }
@@ -56,10 +58,10 @@ export function useUsers() {
   async function deleteUser(id: string) {
     error.value = null
     try {
-      await usersService.deleteUser(id)
+      await usersService.delete(id)
       await fetchUsers()
     } catch (err: any) {
-      error.value = err.response?.data?.message || 'Error al eliminar usuario'
+      error.value = err.response?.data?.message || t('errors.deleteUser')
       throw err
     }
   }
