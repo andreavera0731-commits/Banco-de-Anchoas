@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('auth', () => {
     localStorage.removeItem('token')
   }
 
-  function hasRole(role: string): boolean {
+  function hasRole(role: UserRole): boolean {
     return user.value?.role === role
   }
 

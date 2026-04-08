@@ -6,6 +6,7 @@ export const authService = {
   login(data: LoginRequest) {
     return api.post<ApiResponse<LoginResponse>>('/auth/login', data)
   },
+
   getProfile() {
     return api.get<ApiResponse<UserProfile>>('/auth/profile')
   },

@@ -1,14 +1,37 @@
 import type { RouteLocationNormalized } from 'vue-router'
 import { useAuthStore } from '@/features/auth/stores/auth.store'
+import { authService } from '@/features/auth/services/auth.service'
 
-export function authGuard(to: RouteLocationNormalized) {
+export async function authGuard(to: RouteLocationNormalized) {
   const auth = useAuthStore()
 
+  // Si requiere autenticación y no está autenticado
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return { name: 'login' }
   }
 
-  if (to.meta.role && !auth.hasRole(to.meta.role as string)) {
-    return { name: 'unauthorized' }
+  // Si ya está autenticado y es login, redirigir a dashboard
+  if (to.name === 'login' && auth.isAuthenticated) {
+    return { name: 'dashboard' }
+  }
+
+  // Si requiere rol específico y no tiene ese rol
+  if (to.meta.role) {
+    const requiredRole = to.meta.role as string
+    if (!auth.hasRole(requiredRole as any)) {
+      return { name: 'unauthorized' }
+    }
+  }
+
+  // Si está autenticado pero no tiene datos del usuario, cargar perfil
+  if (auth.isAuthenticated && !auth.user) {
+    try {
+      const response = await authService.getProfile()
+      const userProfile = response.data.data
+      auth.user = userProfile
+    } catch (error) {
+      auth.logout()
+      return { name: 'login' }
+    }
   }
 }
