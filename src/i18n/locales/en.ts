@@ -171,5 +171,8 @@ export default {
   a11y: {
     switchToLight: 'Switch to light mode',
     switchToDark: 'Switch to dark mode',
+    lightTheme: 'Light Theme',
+    darkTheme: 'Dark Theme',
+    language: 'Español',
   },
 }

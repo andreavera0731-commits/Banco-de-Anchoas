@@ -171,5 +171,8 @@ export default {
   a11y: {
     switchToLight: 'Cambiar a modo claro',
     switchToDark: 'Cambiar a modo oscuro',
+    lightTheme: 'Tema claro',
+    darkTheme: 'Tema oscuro',
+    language: 'English',
   },
 }
