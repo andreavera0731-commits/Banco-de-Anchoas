@@ -16,28 +16,13 @@
     <v-row style="margin-top: 32px;">
       <!-- Left: Table -->
       <v-col cols="12" lg="8">
-        <!-- Loading skeleton -->
-        <div v-if="isLoading && users.length === 0" class="bda-table-skeleton">
-          <v-skeleton-loader type="table-thead, table-tbody" />
-        </div>
-
-        <!-- Empty state -->
-        <div v-else-if="users.length === 0" class="bda-empty-state">
-          <v-icon icon="mdi-account-group-outline" size="56" class="mb-3 text-medium-emphasis" />
-          <p class="text-body-1 text-medium-emphasis">{{ t('users.noUsers') }}</p>
-          <v-btn color="primary" variant="tonal" prepend-icon="mdi-plus" class="mt-4" @click="openCreate">
-            {{ t('users.createUser') }}
-          </v-btn>
-        </div>
-
-        <!-- Data table -->
         <BaseDataTable
-          v-else
           :headers="headers"
-          :items="(users as any[])"
+          :items="users"
           :search="search"
           :loading="isLoading"
           :no-data-text="t('users.noResults')"
+          :skeleton-rows="5"
           item-value="id"
         >
           <template #toolbar>
@@ -55,6 +40,14 @@
                 {{ t('users.createUser') }}
               </v-btn>
             </div>
+          </template>
+
+          <template #empty>
+            <v-icon icon="mdi-account-group-outline" size="48" class="mb-3 text-medium-emphasis" />
+            <p class="text-body-1 text-medium-emphasis">{{ t('users.noUsers') }}</p>
+            <v-btn color="primary" variant="tonal" prepend-icon="mdi-plus" class="mt-4" @click="openCreate">
+              {{ t('users.createUser') }}
+            </v-btn>
           </template>
 
           <template #item.role="{ item }">
@@ -87,14 +80,14 @@
                 size="x-small"
                 variant="text"
                 color="primary"
-                @click="openEdit(item as any)"
+                @click="openEdit(item as UserDto)"
               />
               <v-btn
                 icon="mdi-delete-outline"
                 size="x-small"
                 variant="text"
                 color="error"
-                @click="openDelete(item as any)"
+                @click="openDelete(item as UserDto)"
               />
             </div>
           </template>
@@ -145,12 +138,9 @@
       </v-col>
     </v-row>
 
-    <!-- Snackbars -->
-    <v-snackbar v-model="showError" color="error" location="top end" :timeout="4000">
-      {{ error }}
-    </v-snackbar>
-    <v-snackbar v-model="showSuccess" color="success" location="top end" :timeout="3000">
-      {{ successMessage }}
+    <!-- Snackbar -->
+    <v-snackbar v-model="snackbar.visible.value" :color="snackbar.color.value" location="top end" :timeout="3000">
+      {{ snackbar.message.value }}
     </v-snackbar>
 
     <!-- Dialogs -->
@@ -173,13 +163,15 @@
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useUsers } from '@/composables/useUsers'
-import type { UserDto } from '@/types/api.types'
+import { useSnackbar } from '@/composables/useSnackbar'
+import type { UserDto, UserRole } from '@/types/api.types'
 import BaseDataTable from '@/components/BaseDataTable.vue'
 import UserFormDialog from '../components/UserFormDialog.vue'
 import UserDeleteDialog from '../components/UserDeleteDialog.vue'
 
 const { t, tm } = useI18n()
 const { users, isLoading, error, fetchUsers, createUser, updateUser, deleteUser } = useUsers()
+const snackbar = useSnackbar()
 
 const search = ref('')
 const formDialog = ref(false)
@@ -187,9 +179,6 @@ const deleteDialog = ref(false)
 const selectedUser = ref<UserDto | null>(null)
 const formLoading = ref(false)
 const deleteLoading = ref(false)
-const showError = ref(false)
-const showSuccess = ref(false)
-const successMessage = ref('')
 
 const headers = computed(() => [
   { title: t('users.name'), key: 'name', sortable: true },
@@ -199,9 +188,7 @@ const headers = computed(() => [
   { title: t('users.actions'), key: 'actions', sortable: false, align: 'end' as const },
 ])
 
-onMounted(() => {
-  fetchUsers()
-})
+onMounted(fetchUsers)
 
 function openCreate() {
   selectedUser.value = null
@@ -218,28 +205,28 @@ function openDelete(user: UserDto) {
   deleteDialog.value = true
 }
 
-function notifySuccess(message: string) {
-  successMessage.value = message
-  showSuccess.value = true
-}
-
-function notifyError() {
-  showError.value = true
-}
-
-async function handleSubmit(data: { name: string; email: string; password: string; role: string }) {
+async function handleSubmit(data: { name: string; email: string; password: string; role: UserRole }) {
   formLoading.value = true
   try {
     if (selectedUser.value) {
-      await updateUser(selectedUser.value.id, data.email, data.name, data.role)
-      notifySuccess(t('users.updateSuccess'))
+      await updateUser(selectedUser.value.id, {
+        email: data.email,
+        name: data.name,
+        role: data.role,
+      })
+      snackbar.show(t('users.updateSuccess'))
     } else {
-      await createUser(data.email, data.name, data.password, data.role)
-      notifySuccess(t('users.createSuccess'))
+      await createUser({
+        email: data.email,
+        name: data.name,
+        password: data.password,
+        role: data.role,
+      })
+      snackbar.show(t('users.createSuccess'))
     }
     formDialog.value = false
   } catch {
-    notifyError()
+    snackbar.show(error.value ?? t('errors.generic'), 'error')
   } finally {
     formLoading.value = false
   }
@@ -250,10 +237,10 @@ async function handleDelete() {
   deleteLoading.value = true
   try {
     await deleteUser(selectedUser.value.id)
-    notifySuccess(t('users.deleteSuccess'))
+    snackbar.show(t('users.deleteSuccess'))
     deleteDialog.value = false
   } catch {
-    notifyError()
+    snackbar.show(error.value ?? t('errors.generic'), 'error')
   } finally {
     deleteLoading.value = false
   }
@@ -261,21 +248,6 @@ async function handleDelete() {
 </script>
 
 <style scoped>
-.bda-table-skeleton {
-  border: 1px solid var(--bda-border-color);
-  border-radius: var(--bda-radius-md);
-  overflow: hidden;
-}
-
-.bda-empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: var(--bda-space-16) var(--bda-space-4);
-  border: 1px dashed var(--bda-border-color);
-  border-radius: var(--bda-radius-md);
-}
-
 .roles-panel {
   border: 1px solid var(--bda-border-color);
   border-radius: var(--bda-radius-md);

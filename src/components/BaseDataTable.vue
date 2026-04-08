@@ -5,8 +5,23 @@
       <slot name="toolbar" />
     </div>
 
+    <!-- Loading skeleton -->
+    <div v-if="loading && items.length === 0" class="bda-table-skeleton">
+      <v-skeleton-loader type="table-heading" />
+      <v-skeleton-loader v-for="n in skeletonRows" :key="n" type="list-item" />
+    </div>
+
+    <!-- Empty state -->
+    <div v-else-if="items.length === 0 && !loading" class="bda-empty-state">
+      <slot name="empty">
+        <v-icon icon="mdi-database-off-outline" size="48" class="mb-3 text-medium-emphasis" />
+        <p class="text-body-1 text-medium-emphasis">{{ noDataText }}</p>
+      </slot>
+    </div>
+
     <!-- Table -->
     <v-data-table
+      v-else
       v-bind="$attrs"
       :headers="headers"
       :items="items"
@@ -16,7 +31,6 @@
       :items-per-page="itemsPerPage"
       class="bda-data-table"
     >
-      <!-- Pass through all slots to the inner data table -->
       <template v-for="(_, name) in $slots" :key="name" #[name]="slotData">
         <slot :name="name" v-bind="slotData ?? {}" />
       </template>
@@ -27,14 +41,17 @@
 <script setup lang="ts">
 defineOptions({ inheritAttrs: false })
 
-defineProps<{
+withDefaults(defineProps<{
   headers: Array<{ title: string; key: string; sortable?: boolean; align?: 'start' | 'end' | 'center' }>
   items: Array<Record<string, unknown>>
   search?: string
   loading?: boolean
   noDataText?: string
   itemsPerPage?: number
-}>()
+  skeletonRows?: number
+}>(), {
+  skeletonRows: 5,
+})
 </script>
 
 <style scoped>
@@ -48,6 +65,17 @@ defineProps<{
 .bda-table-toolbar {
   padding: var(--bda-space-3) var(--bda-space-4);
   border-bottom: 1px solid var(--bda-border-color);
+}
+
+.bda-table-skeleton {
+  padding: var(--bda-space-2) var(--bda-space-4);
+}
+
+.bda-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--bda-space-10) var(--bda-space-4);
 }
 
 .bda-data-table {

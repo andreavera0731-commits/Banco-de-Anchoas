@@ -93,7 +93,7 @@
 import { ref, reactive, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useValidationRules } from '@/utils/validators'
-import type { UserDto } from '@/types/api.types'
+import type { UserDto, UserRole } from '@/types/api.types'
 
 const props = defineProps<{
   modelValue: boolean
@@ -103,7 +103,7 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   'update:modelValue': [value: boolean]
-  'submit': [data: { name: string; email: string; password: string; role: string }]
+  'submit': [data: { name: string; email: string; password: string; role: UserRole }]
 }>()
 
 const { t } = useI18n()
@@ -115,7 +115,7 @@ const form = reactive({
   name: '',
   email: '',
   password: '',
-  role: 'Almacenista' as string,
+  role: 'Almacenista' as UserRole,
 })
 
 const isEditing = ref(false)

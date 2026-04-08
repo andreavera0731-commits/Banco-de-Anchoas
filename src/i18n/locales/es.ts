@@ -127,6 +127,7 @@ export default {
     backToHome: 'Volver al inicio',
   },
   errors: {
+    generic: 'Ha ocurrido un error inesperado',
     loadCategories: 'Error al cargar categorías',
     createCategory: 'Error al crear categoría',
     updateCategory: 'Error al actualizar categoría',
