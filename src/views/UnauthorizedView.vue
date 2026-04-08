@@ -4,8 +4,8 @@
       <v-col cols="12" class="text-center">
         <h1>{{ t('unauthorized.title') }}</h1>
         <p>{{ t('unauthorized.message') }}</p>
-        <v-btn color="primary" :to="{ name: 'dashboard' }">
-          {{ t('unauthorized.backToDashboard') }}
+        <v-btn color="primary" variant="tonal" :to="{ name: 'products' }">
+          {{ t('unauthorized.backToHome') }}
         </v-btn>
       </v-col>
     </v-container>

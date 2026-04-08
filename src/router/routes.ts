@@ -9,9 +9,7 @@ export const routes: RouteRecordRaw[] = [
   },
   {
     path: '/',
-    name: 'dashboard',
-    component: () => import('@/features/dashboard/views/DashboardView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
+    redirect: { name: 'products' },
   },
   {
     path: '/products',

@@ -1,0 +1,59 @@
+<template>
+  <v-dialog
+    :model-value="modelValue"
+    max-width="400"
+    @update:model-value="$emit('update:modelValue', $event)"
+  >
+    <v-card rounded="lg">
+      <v-card-title class="d-flex align-center ga-3 pt-6 px-7 pb-0">
+        <v-avatar size="36" color="error" variant="tonal">
+          <v-icon icon="mdi-alert-circle-outline" size="20" />
+        </v-avatar>
+        <span class="text-h6 font-weight-bold">{{ t('users.deleteUser') }}</span>
+      </v-card-title>
+
+      <v-card-text class="px-7 pt-4 pb-2">
+        <p class="text-body-2 mb-2">
+          {{ t('users.confirmDelete', { name: user?.name ?? '' }) }}
+        </p>
+        <p class="text-caption text-medium-emphasis">
+          {{ t('users.confirmDeleteDescription') }}
+        </p>
+      </v-card-text>
+
+      <v-card-actions class="px-7 pb-6 pt-3">
+        <v-spacer />
+        <v-btn variant="text" @click="$emit('update:modelValue', false)">
+          {{ t('users.cancel') }}
+        </v-btn>
+        <v-btn
+          color="error"
+          variant="flat"
+          :loading="loading"
+          min-width="100"
+          @click="$emit('confirm')"
+        >
+          {{ t('users.delete') }}
+        </v-btn>
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script setup lang="ts">
+import { useI18n } from 'vue-i18n'
+import type { UserDto } from '@/types/api.types'
+
+defineProps<{
+  modelValue: boolean
+  user?: UserDto | null
+  loading?: boolean
+}>()
+
+defineEmits<{
+  'update:modelValue': [value: boolean]
+  'confirm': []
+}>()
+
+const { t } = useI18n()
+</script>

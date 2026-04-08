@@ -8,51 +8,11 @@
   >
     <v-list density="compact" nav class="pa-1">
       <v-list-item
-        :to="{ name: 'dashboard' }"
-        prepend-icon="mdi-view-dashboard-outline"
-        :title="t('nav.dashboard')"
-        rounded="lg"
-        color="primary"
-      />
-      <v-list-item
-        :to="{ name: 'products' }"
-        prepend-icon="mdi-package-variant"
-        :title="t('nav.products')"
-        rounded="lg"
-        color="primary"
-      />
-      <v-list-item
-        :to="{ name: 'stock' }"
-        prepend-icon="mdi-swap-horizontal"
-        :title="t('nav.stock')"
-        rounded="lg"
-        color="primary"
-      />
-      <v-list-item
-        :to="{ name: 'warehouses' }"
-        prepend-icon="mdi-warehouse"
-        :title="t('nav.warehouses')"
-        rounded="lg"
-        color="primary"
-      />
-      <v-list-item
-        :to="{ name: 'categories' }"
-        prepend-icon="mdi-tag-multiple-outline"
-        :title="t('nav.categories')"
-        rounded="lg"
-        color="primary"
-      />
-      <v-list-item
-        :to="{ name: 'users' }"
-        prepend-icon="mdi-account-group-outline"
-        :title="t('nav.users')"
-        rounded="lg"
-        color="primary"
-      />
-      <v-list-item
-        :to="{ name: 'notifications' }"
-        prepend-icon="mdi-bell-outline"
-        :title="t('nav.notifications')"
+        v-for="item in visibleItems"
+        :key="item.route"
+        :to="{ name: item.route }"
+        :prepend-icon="item.icon"
+        :title="t(item.titleKey)"
         rounded="lg"
         color="primary"
       />
@@ -62,8 +22,10 @@
 
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import { useNavigation } from '@/composables/useNavigation'
 
 const { t } = useI18n()
+const { visibleItems } = useNavigation()
 </script>
 
 <style scoped>

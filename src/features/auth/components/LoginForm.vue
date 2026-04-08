@@ -220,7 +220,7 @@ const form = ref(null)
 async function handleLogin() {
   const success = await login({ email: email.value, password: password.value })
   if (success) {
-    router.push({ name: 'dashboard' })
+    router.push({ name: 'products' })
   }
 }
 </script>
