@@ -38,5 +38,14 @@ export function useValidationRules() {
       (v: string) => isValidPassword(v) || t('validation.passwordMinLength'),
     ],
     required: [(v: string) => isRequired(v) || t('validation.fieldRequired')],
+    numberMin: (min: number) => [
+      (v: number | string | null) => v !== null && v !== '' || t('validation.numberRequired'),
+      (v: number | string | null) => Number(v) >= min || t('validation.numberMin', { min }),
+    ],
+    numberPositive: [
+      (v: number | string | null) => v !== null && v !== '' || t('validation.numberRequired'),
+      (v: number | string | null) => Number(v) > 0 || t('validation.numberPositive'),
+    ],
+    selectRequired: [(v: unknown) => v !== null && v !== undefined && v !== '' || t('validation.selectRequired')],
   }
 }

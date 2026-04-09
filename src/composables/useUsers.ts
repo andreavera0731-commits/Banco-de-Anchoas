@@ -1,11 +1,7 @@
 import { ref } from 'vue'
 import { usersService } from '@/services/users.service'
+import { extractError } from '@/utils/errors'
 import type { UserDto, UserRole } from '@/types/api.types'
-
-function extractError(err: unknown): string | null {
-  const res = (err as any)?.response?.data
-  return res?.message ?? res?.errors ?? null
-}
 
 export function useUsers() {
   const users = ref<UserDto[]>([])

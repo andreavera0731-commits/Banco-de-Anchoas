@@ -77,3 +77,10 @@ export function formatRelativeTime(date: string | Date, t: (key: string, count?:
   
   return formatDate(d)
 }
+
+/**
+ * Returns a Vuetify color name for a stock chip based on stock level.
+ */
+export function getStockColor(stock: number, minimumStock: number): string {
+  return stock <= minimumStock && minimumStock > 0 ? 'error' : 'success'
+}

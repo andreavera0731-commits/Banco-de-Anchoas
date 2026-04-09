@@ -1,10 +1,15 @@
 import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { productsService } from '@/services/products.service'
-import type { ProductListDto, ProductDto, GetProductsParams } from '@/types/api.types'
+import { extractError } from '@/utils/errors'
+import type {
+  ProductListDto,
+  ProductDto,
+  CreateProductRequest,
+  UpdateProductRequest,
+  GetProductsParams,
+} from '@/types/api.types'
 
 export function useProducts() {
-  const { t } = useI18n()
   const products = ref<ProductListDto[]>([])
   const productDetail = ref<ProductDto | null>(null)
   const isLoading = ref(false)
@@ -13,6 +18,7 @@ export function useProducts() {
   const pageSize = ref(20)
   const totalCount = ref(0)
   const totalPages = ref(0)
+  let lastParams: GetProductsParams | undefined
 
   const paginationInfo = computed(() => ({
     pageNumber: pageNumber.value,
@@ -22,16 +28,17 @@ export function useProducts() {
   }))
 
   async function fetchProducts(params?: GetProductsParams) {
+    if (params) lastParams = params
     isLoading.value = true
     error.value = null
     try {
-      const response = await productsService.getAll(params)
+      const response = await productsService.getAll(params ?? lastParams)
       products.value = response.data.data.items
       pageNumber.value = response.data.data.pageNumber
       totalCount.value = response.data.data.totalCount
       totalPages.value = response.data.data.totalPages
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.loadProducts')
+    } catch (err) {
+      error.value = extractError(err)
     } finally {
       isLoading.value = false
     }
@@ -44,72 +51,63 @@ export function useProducts() {
       const response = await productsService.getById(id)
       productDetail.value = response.data.data
       return productDetail.value
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.loadProduct')
+    } catch (err) {
+      error.value = extractError(err)
     } finally {
       isLoading.value = false
     }
   }
 
   async function fetchProductByBarcode(barcode: string) {
-    isLoading.value = true
     error.value = null
     try {
       const response = await productsService.getByBarcode(barcode)
       productDetail.value = response.data.data
       return productDetail.value
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.productNotFound')
-    } finally {
-      isLoading.value = false
+    } catch (err) {
+      error.value = extractError(err)
     }
   }
 
   async function fetchLowStockProducts() {
-    isLoading.value = true
     error.value = null
     try {
       const response = await productsService.getLowStock()
       return response.data.data
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.loadLowStock')
-    } finally {
-      isLoading.value = false
+    } catch (err) {
+      error.value = extractError(err)
     }
   }
 
   async function fetchExpiringProducts() {
-    isLoading.value = true
     error.value = null
     try {
       const response = await productsService.getExpiring()
       return response.data.data
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.loadExpiring')
-    } finally {
-      isLoading.value = false
+    } catch (err) {
+      error.value = extractError(err)
     }
   }
 
-  async function createProduct(data: any) {
+  async function createProduct(data: CreateProductRequest) {
     error.value = null
     try {
       const response = await productsService.create(data)
       await fetchProducts()
       return response.data.data
-    } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.createProduct')
+    } catch (err) {
+      error.value = extractError(err)
       throw err
     }
   }
 
-  async function updateProduct(id: number, data: any) {
+  async function updateProduct(id: number, data: UpdateProductRequest) {
     error.value = null
     try {
-      await productsService.update(id, { ...data, id })
+      await productsService.update(id, data)
       await fetchProducts()
-    } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.updateProduct')
+    } catch (err) {
+      error.value = extractError(err)
       throw err
     }
   }
@@ -119,8 +117,8 @@ export function useProducts() {
     try {
       await productsService.delete(id)
       await fetchProducts()
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.deleteProduct')
+    } catch (err) {
+      error.value = extractError(err)
       throw err
     }
   }

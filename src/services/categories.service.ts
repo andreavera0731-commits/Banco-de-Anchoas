@@ -12,7 +12,7 @@ export const categoriesService = {
   },
 
   getById(id: number) {
-    return api.get<ApiResponse<CategoryDto>>(`/categories/${id}`)
+    return api.get<ApiResponse<CategoryDto>>(`/categories/${encodeURIComponent(id)}`)
   },
 
   create(data: CreateCategoryRequest) {
@@ -20,10 +20,10 @@ export const categoriesService = {
   },
 
   update(id: number, data: UpdateCategoryRequest) {
-    return api.put(`/categories/${id}`, data)
+    return api.put(`/categories/${encodeURIComponent(id)}`, data)
   },
 
   delete(id: number) {
-    return api.delete(`/categories/${id}`)
+    return api.delete(`/categories/${encodeURIComponent(id)}`)
   },
 }

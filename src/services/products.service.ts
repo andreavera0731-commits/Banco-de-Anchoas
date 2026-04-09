@@ -15,7 +15,7 @@ export const productsService = {
   },
 
   getById(id: number) {
-    return api.get<ApiResponse<ProductDto>>(`/products/${id}`)
+    return api.get<ApiResponse<ProductDto>>(`/products/${encodeURIComponent(id)}`)
   },
 
   getByBarcode(barcode: string) {
@@ -35,10 +35,10 @@ export const productsService = {
   },
 
   update(id: number, data: UpdateProductRequest) {
-    return api.put(`/products/${id}`, data)
+    return api.put(`/products/${encodeURIComponent(id)}`, data)
   },
 
   delete(id: number) {
-    return api.delete(`/products/${id}`)
+    return api.delete(`/products/${encodeURIComponent(id)}`)
   },
 }
