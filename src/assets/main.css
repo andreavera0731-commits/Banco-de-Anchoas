@@ -167,3 +167,21 @@ a.v-list-item:hover {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
+/* Toolbar search field */
+.bda-search-field {
+  max-width: 280px;
+  transition: all var(--bda-transition-base);
+}
+
+.bda-search-field :deep(.v-field) {
+  border-radius: var(--bda-radius-pill) !important;
+  transition:
+    border-color var(--bda-transition-fast),
+    box-shadow var(--bda-transition-fast);
+}
+
+.bda-search-field :deep(.v-field--focused) {
+  border-color: rgb(var(--v-theme-primary)) !important;
+  box-shadow: 0 0 0 3px rgb(var(--v-theme-primary) / 0.15);
+}

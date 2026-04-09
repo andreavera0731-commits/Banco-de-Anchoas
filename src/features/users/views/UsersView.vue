@@ -33,7 +33,7 @@
                 prepend-inner-icon="mdi-magnify"
                 clearable
                 single-line
-                style="max-width: 320px;"
+                class="bda-search-field"
               />
               <v-spacer />
               <v-btn color="primary" prepend-icon="mdi-plus" size="small" @click="openCreate">

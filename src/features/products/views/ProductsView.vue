@@ -32,39 +32,39 @@
                 prepend-inner-icon="mdi-magnify"
                 clearable
                 single-line
-                style="max-width: 280px;"
+                class="bda-search-field"
               />
+              <v-chip-group
+                v-if="categoryOptions.length > 0"
+                v-model="categoryFilter"
+                selected-class="text-primary"
+                class="flex-grow-0"
+                @update:model-value="onCategoryFilter"
+              >
+                <v-chip
+                  :value="null"
+                  size="small"
+                  variant="tonal"
+                  label
+                >
+                  {{ t('products.allCategories') }}
+                </v-chip>
+                <v-chip
+                  v-for="cat in categoryOptions"
+                  :key="cat.id"
+                  :value="cat.id"
+                  size="small"
+                  variant="tonal"
+                  label
+                >
+                  {{ cat.name }}
+                </v-chip>
+              </v-chip-group>
               <v-spacer />
               <v-btn color="primary" prepend-icon="mdi-plus" size="small" @click="openCreate">
                 {{ t('products.createProduct') }}
               </v-btn>
             </div>
-            <v-chip-group
-              v-if="categoryOptions.length > 0"
-              v-model="categoryFilter"
-              selected-class="text-primary"
-              class="mt-2"
-              @update:model-value="onCategoryFilter"
-            >
-              <v-chip
-                :value="null"
-                size="small"
-                variant="tonal"
-                label
-              >
-                {{ t('products.allCategories') }}
-              </v-chip>
-              <v-chip
-                v-for="cat in categoryOptions"
-                :key="cat.id"
-                :value="cat.id"
-                size="small"
-                variant="tonal"
-                label
-              >
-                {{ cat.name }}
-              </v-chip>
-            </v-chip-group>
           </template>
 
           <template #empty>

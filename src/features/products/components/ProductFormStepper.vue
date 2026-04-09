@@ -150,11 +150,9 @@
                 prepend-inner-icon="mdi-truck-outline"
               />
 
-              <v-text-field
+              <DatePickerField
                 v-model="form.expirationDate"
                 :label="`${t('products.expirationDate')} ${t('products.optional')}`"
-                prepend-inner-icon="mdi-calendar-outline"
-                type="date"
               />
             </v-form>
           </template>
@@ -235,6 +233,7 @@ import { useValidationRules } from '@/utils/validators'
 import { categoriesService } from '@/services/categories.service'
 import { warehousesService } from '@/services/warehouses.service'
 import { productsService } from '@/services/products.service'
+import DatePickerField from '@/components/DatePickerField.vue'
 import type {
   ProductDto,
   CategoryDto,
