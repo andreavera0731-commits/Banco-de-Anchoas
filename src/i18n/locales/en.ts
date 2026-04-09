@@ -50,6 +50,7 @@ export default {
     categories: 'Categories',
     users: 'Users',
     notifications: 'Notifications',
+    requesters: 'Requesters',
   },
   products: {
     title: 'Products',
@@ -188,6 +189,9 @@ export default {
     // Buttons
     cancel: 'Cancel',
     register: 'Register',
+    // Form fields (exit)
+    selectRequester: 'Requester',
+    requester: 'Requester',
     // Success
     entrySuccess: 'Entry registered successfully.',
     exitSuccess: 'Exit registered successfully.',
@@ -208,6 +212,7 @@ export default {
     infoRulesTitle: 'Important',
     infoRulesItems: [
       'Exits and write-offs require available stock',
+      'Exits require an assigned requester',
       'Relocations need different source and destination sectors',
       'Adjustments must indicate increase or decrease',
       'All movements are logged in the history',
@@ -389,6 +394,49 @@ export default {
     message: 'You do not have permission to access this page.',
     backToHome: 'Back to home',
   },
+  requesters: {
+    title: 'Requesters',
+    subtitle: 'Manage the requesters who can request stock exits.',
+    createRequester: 'Create requester',
+    editRequester: 'Edit requester',
+    deleteRequester: 'Delete requester',
+    // Field labels
+    name: 'Name',
+    description: 'Description',
+    createdAt: 'Created at',
+    actions: 'Actions',
+    // Search & empty
+    search: 'Search requesters...',
+    noRequesters: 'No requesters registered.',
+    noResults: 'No results.',
+    // Delete dialog
+    confirmDelete: 'Delete requester "{name}"?',
+    confirmDeleteDescription: 'This will deactivate the requester. It will not be assignable to new exit movements.',
+    // Success
+    createSuccess: 'Requester created successfully.',
+    updateSuccess: 'Requester updated successfully.',
+    deleteSuccess: 'Requester deleted successfully.',
+    // Buttons
+    cancel: 'Cancel',
+    save: 'Save',
+    create: 'Create',
+    delete: 'Delete',
+    // Info panel
+    infoTitle: 'What are requesters?',
+    infoDescription: 'Requesters represent the people or entities that request stock exits from the warehouse.',
+    infoHowTitle: 'How they work',
+    infoHowItems: [
+      'Each stock exit requires an assigned requester',
+      'Allows tracking who requested each exit movement',
+      'Only administrators can manage requesters',
+    ],
+    infoRulesTitle: 'Important',
+    infoRulesItems: [
+      'A deleted requester cannot be assigned to new movements',
+      'Existing movements keep the reference to the requester',
+      'The requester name is required',
+    ],
+  },
   errors: {
     generic: 'An unexpected error occurred',
     loadCategories: 'Error loading categories',
@@ -426,6 +474,10 @@ export default {
     loadSector: 'Error loading sector',
     updateSector: 'Error updating sector',
     deleteSector: 'Error deleting sector',
+    loadRequesters: 'Error loading requesters',
+    createRequester: 'Error creating requester',
+    updateRequester: 'Error updating requester',
+    deleteRequester: 'Error deleting requester',
   },
   enums: {
     movementType: {

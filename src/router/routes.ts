@@ -42,6 +42,12 @@ export const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, role: 'Admin', layout: 'default' },
   },
   {
+    path: '/requesters',
+    name: 'requesters',
+    component: () => import('@/features/requesters/views/RequestersView.vue'),
+    meta: { requiresAuth: true, role: 'Admin', layout: 'default' },
+  },
+  {
     path: '/notifications',
     name: 'notifications',
     component: () => import('@/features/notifications/views/NotificationsView.vue'),

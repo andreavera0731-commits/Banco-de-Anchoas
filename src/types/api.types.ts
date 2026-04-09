@@ -171,6 +171,8 @@ export interface StockMovementDto {
   sectorName: string
   fromSectorId: number | null
   fromSectorName: string | null
+  requesterId: number | null
+  requesterName: string | null
   userId: string
   createdAt: string
 }
@@ -181,6 +183,7 @@ export interface RegisterMovementRequest {
   quantity: number
   type: MovementType.Entry | MovementType.Exit
   notes?: string | null
+  requesterId?: number | null
 }
 
 export interface RegisterWriteOffRequest {
@@ -319,4 +322,26 @@ export interface GetNotificationsParams {
   isRead?: boolean
   pageNumber?: number
   pageSize?: number
+}
+
+// ============================================================
+// SOLICITANTES (REQUESTERS)
+// ============================================================
+
+export interface RequesterDto {
+  id: number
+  name: string
+  description: string | null
+  createdAt: string
+}
+
+export interface CreateRequesterRequest {
+  name: string
+  description?: string | null
+}
+
+export interface UpdateRequesterRequest {
+  id: number
+  name: string
+  description?: string | null
 }

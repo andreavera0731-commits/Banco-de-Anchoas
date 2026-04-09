@@ -15,6 +15,7 @@ export const navItems: readonly NavItem[] = [
   { route: 'warehouses', icon: 'mdi-warehouse', titleKey: 'nav.warehouses' },
   { route: 'categories', icon: 'mdi-tag-multiple-outline', titleKey: 'nav.categories', role: 'Admin' },
   { route: 'users', icon: 'mdi-account-group-outline', titleKey: 'nav.users', role: 'Admin' },
+  { route: 'requesters', icon: 'mdi-account-arrow-right-outline', titleKey: 'nav.requesters', role: 'Admin' },
   { route: 'notifications', icon: 'mdi-bell-outline', titleKey: 'nav.notifications' },
 ]
 

@@ -50,6 +50,7 @@ export default {
     categories: 'Categorías',
     users: 'Usuarios',
     notifications: 'Notificaciones',
+    requesters: 'Solicitantes',
   },
   products: {
     title: 'Productos',
@@ -188,6 +189,9 @@ export default {
     // Buttons
     cancel: 'Cancelar',
     register: 'Registrar',
+    // Form fields (exit)
+    selectRequester: 'Solicitante',
+    requester: 'Solicitante',
     // Success
     entrySuccess: 'Entrada registrada correctamente.',
     exitSuccess: 'Salida registrada correctamente.',
@@ -208,6 +212,7 @@ export default {
     infoRulesTitle: 'Importante',
     infoRulesItems: [
       'Las salidas y bajas requieren stock disponible',
+      'Las salidas requieren un solicitante asignado',
       'Las reubicaciones necesitan sector de origen y destino distintos',
       'Los ajustes deben indicar si es incremento o decremento',
       'Todos los movimientos quedan registrados en el historial',
@@ -389,6 +394,49 @@ export default {
     message: 'No tienes permisos para acceder a esta página.',
     backToHome: 'Volver al inicio',
   },
+  requesters: {
+    title: 'Solicitantes',
+    subtitle: 'Gestiona los solicitantes que pueden solicitar salidas de stock.',
+    createRequester: 'Crear solicitante',
+    editRequester: 'Editar solicitante',
+    deleteRequester: 'Eliminar solicitante',
+    // Field labels
+    name: 'Nombre',
+    description: 'Descripción',
+    createdAt: 'Fecha de creación',
+    actions: 'Acciones',
+    // Search & empty
+    search: 'Buscar solicitantes...',
+    noRequesters: 'No hay solicitantes registrados.',
+    noResults: 'Sin resultados.',
+    // Delete dialog
+    confirmDelete: '¿Eliminar al solicitante "{name}"?',
+    confirmDeleteDescription: 'Esta acción desactivará al solicitante. No podrá asignarse a nuevos movimientos de salida.',
+    // Success
+    createSuccess: 'Solicitante creado correctamente.',
+    updateSuccess: 'Solicitante actualizado correctamente.',
+    deleteSuccess: 'Solicitante eliminado correctamente.',
+    // Buttons
+    cancel: 'Cancelar',
+    save: 'Guardar',
+    create: 'Crear',
+    delete: 'Eliminar',
+    // Info panel
+    infoTitle: '¿Qué son los solicitantes?',
+    infoDescription: 'Los solicitantes representan a las personas o entidades que solicitan salidas de stock del almacén.',
+    infoHowTitle: 'Cómo funcionan',
+    infoHowItems: [
+      'Cada salida de stock requiere un solicitante asignado',
+      'Permite rastrear quién solicitó cada movimiento de salida',
+      'Solo los administradores pueden gestionar solicitantes',
+    ],
+    infoRulesTitle: 'Importante',
+    infoRulesItems: [
+      'Un solicitante eliminado no puede asignarse a nuevos movimientos',
+      'Los movimientos existentes mantienen la referencia al solicitante',
+      'El nombre del solicitante es obligatorio',
+    ],
+  },
   errors: {
     generic: 'Ha ocurrido un error inesperado',
     loadCategories: 'Error al cargar categorías',
@@ -426,6 +474,10 @@ export default {
     loadSector: 'Error al cargar sector',
     updateSector: 'Error al actualizar sector',
     deleteSector: 'Error al eliminar sector',
+    loadRequesters: 'Error al cargar solicitantes',
+    createRequester: 'Error al crear solicitante',
+    updateRequester: 'Error al actualizar solicitante',
+    deleteRequester: 'Error al eliminar solicitante',
   },
   enums: {
     movementType: {

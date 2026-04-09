@@ -115,6 +115,18 @@
             />
           </template>
 
+          <!-- Requester (exit only) -->
+          <v-select
+            v-if="operation === 'exit'"
+            v-model="form.requesterId"
+            :items="requesterOptions"
+            item-value="id"
+            item-title="name"
+            :label="t('stock.selectRequester')"
+            :rules="rules.selectRequired"
+            prepend-inner-icon="mdi-account-arrow-right-outline"
+          />
+
           <!-- Quantity -->
           <v-text-field
             v-model.number="form.quantity"
@@ -185,8 +197,9 @@ import { useEnumLabels } from '@/utils/enums.helper'
 import { productsService } from '@/services/products.service'
 import { warehousesService } from '@/services/warehouses.service'
 import { sectorsService } from '@/services/sectors.service'
+import { requestersService } from '@/services/requesters.service'
 import { MovementReason, AdjustmentType } from '@/types/api.types'
-import type { ProductListDto, ProductUnit, WarehouseDto, SectorDto } from '@/types/api.types'
+import type { ProductListDto, ProductUnit, WarehouseDto, SectorDto, RequesterDto } from '@/types/api.types'
 
 export type StockOperation = 'entry' | 'exit' | 'writeOff' | 'relocation' | 'adjustment'
 
@@ -198,6 +211,7 @@ export interface StockMovementFormData {
   reason?: MovementReason
   adjustmentType?: AdjustmentType
   notes?: string
+  requesterId?: number
 }
 
 const props = defineProps<{
@@ -227,6 +241,7 @@ const form = reactive({
   reason: null as MovementReason | null,
   adjustmentType: null as AdjustmentType | null,
   notes: '',
+  requesterId: null as number | null,
 })
 
 const selectedUnit = ref<ProductUnit | null>(null)
@@ -237,6 +252,7 @@ const warehouseOptions = ref<WarehouseDto[]>([])
 const sectorOptions = ref<SectorDto[]>([])
 const fromSectorOptions = ref<SectorDto[]>([])
 const toSectorOptions = ref<SectorDto[]>([])
+const requesterOptions = ref<RequesterDto[]>([])
 
 // Map products to autocomplete items with barcode in subtitle
 const productItems = computed(() =>
@@ -335,6 +351,12 @@ watch(() => props.modelValue, async (open) => {
         warehouseOptions.value = res.data.data
       } catch { /* non-critical */ }
     }
+    if (requesterOptions.value.length === 0) {
+      try {
+        const res = await requestersService.getAll()
+        requesterOptions.value = res.data.data
+      } catch { /* non-critical */ }
+    }
   }
 })
 
@@ -373,6 +395,7 @@ function resetForm() {
   form.reason = null
   form.adjustmentType = null
   form.notes = ''
+  form.requesterId = null
   selectedUnit.value = null
   sectorOptions.value = []
   fromSectorOptions.value = []
@@ -392,6 +415,7 @@ async function handleSubmit() {
     reason: form.reason ?? undefined,
     adjustmentType: form.adjustmentType ?? undefined,
     notes: form.notes || undefined,
+    requesterId: form.requesterId ?? undefined,
   })
 }
 

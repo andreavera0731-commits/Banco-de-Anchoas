@@ -117,6 +117,11 @@
             </template>
           </template>
 
+          <template #item.requesterName="{ item }">
+            <span v-if="item.requesterName">{{ item.requesterName }}</span>
+            <span v-else class="text-disabled">—</span>
+          </template>
+
           <template #item.notes="{ item }">
             <span v-if="item.notes" class="text-medium-emphasis text-caption">{{ item.notes }}</span>
             <span v-else class="text-disabled">—</span>
@@ -225,6 +230,7 @@ const headers = computed(() => [
   { title: t('stock.product'), key: 'productName', sortable: true },
   { title: t('stock.quantity'), key: 'quantity', sortable: true },
   { title: t('stock.sector'), key: 'sectorName', sortable: true },
+  { title: t('stock.requester'), key: 'requesterName', sortable: true },
   { title: t('stock.notes'), key: 'notes', sortable: false },
 ])
 
@@ -320,6 +326,7 @@ async function handleSubmit(data: StockMovementFormData) {
           quantity: data.quantity,
           type: MovementType.Exit,
           notes: data.notes,
+          requesterId: data.requesterId,
         })
         snackbar.show(t('stock.exitSuccess'))
         break
