@@ -11,6 +11,19 @@ export function getNotificationTypeColor(type: number): string {
   return notificationTypeColors[type] || 'default'
 }
 
+// Movement Type Colors (no i18n needed)
+export const movementTypeColors: Record<number, string> = {
+  0: 'success',   // Entry
+  1: 'warning',   // Exit
+  2: 'error',     // WriteOff
+  3: 'info',      // Relocation
+  4: 'secondary', // Adjustment
+}
+
+export function getMovementTypeColor(type: number): string {
+  return movementTypeColors[type] || 'default'
+}
+
 // Enum key mappings (index → translation key suffix)
 const movementTypeKeys: Record<number, string> = {
   0: 'entry', 1: 'exit', 2: 'writeOff', 3: 'relocation', 4: 'adjustment',

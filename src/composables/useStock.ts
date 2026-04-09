@@ -1,118 +1,102 @@
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
+import { ref, computed } from 'vue'
 import { stockService } from '@/services/stock.service'
+import { extractError } from '@/utils/errors'
 import type {
+  StockMovementDto,
   RegisterMovementRequest,
   RegisterWriteOffRequest,
   RegisterRelocationRequest,
   RegisterAdjustmentRequest,
   GetMovementHistoryParams,
-  StockMovementDto,
 } from '@/types/api.types'
 
 export function useStock() {
-  const { t } = useI18n()
+  const movements = ref<StockMovementDto[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
-  const movements = ref<StockMovementDto[]>([])
+  const pageNumber = ref(1)
+  const pageSize = ref(20)
+  const totalCount = ref(0)
   const totalPages = ref(0)
-  const currentPage = ref(1)
+  let lastParams: GetMovementHistoryParams | undefined
 
-  async function registerMovement(data: RegisterMovementRequest) {
+  const paginationInfo = computed(() => ({
+    pageNumber: pageNumber.value,
+    pageSize: pageSize.value,
+    totalCount: totalCount.value,
+    totalPages: totalPages.value,
+  }))
+
+  async function fetchMovementHistory(params?: GetMovementHistoryParams) {
+    if (params) lastParams = params
     isLoading.value = true
     error.value = null
     try {
-      const response = await stockService.registerMovement(data)
-      return response.data.data
-    } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.registerMovement')
-      throw err
+      const response = await stockService.getHistory(params ?? lastParams)
+      movements.value = response.data.data.items
+      pageNumber.value = response.data.data.pageNumber
+      totalCount.value = response.data.data.totalCount
+      totalPages.value = response.data.data.totalPages
+    } catch (err) {
+      error.value = extractError(err)
     } finally {
       isLoading.value = false
+    }
+  }
+
+  async function registerMovement(data: RegisterMovementRequest) {
+    error.value = null
+    try {
+      await stockService.registerMovement(data)
+      await fetchMovementHistory()
+    } catch (err) {
+      error.value = extractError(err)
+      throw err
     }
   }
 
   async function registerWriteOff(data: RegisterWriteOffRequest) {
-    isLoading.value = true
     error.value = null
     try {
-      const response = await stockService.registerWriteOff(data)
-      return response.data.data
-    } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.registerWriteOff')
+      await stockService.registerWriteOff(data)
+      await fetchMovementHistory()
+    } catch (err) {
+      error.value = extractError(err)
       throw err
-    } finally {
-      isLoading.value = false
     }
   }
 
   async function registerRelocation(data: RegisterRelocationRequest) {
-    isLoading.value = true
     error.value = null
     try {
-      const response = await stockService.relocate(data)
-      return response.data.data
-    } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.registerRelocation')
+      await stockService.relocate(data)
+      await fetchMovementHistory()
+    } catch (err) {
+      error.value = extractError(err)
       throw err
-    } finally {
-      isLoading.value = false
     }
   }
 
   async function registerAdjustment(data: RegisterAdjustmentRequest) {
-    isLoading.value = true
     error.value = null
     try {
-      const response = await stockService.adjust(data)
-      return response.data.data
-    } catch (err: any) {
-      error.value = err.response?.data?.errors || err.response?.data?.message || t('errors.registerAdjustment')
+      await stockService.adjust(data)
+      await fetchMovementHistory()
+    } catch (err) {
+      error.value = extractError(err)
       throw err
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  async function fetchMovementHistory(params?: GetMovementHistoryParams) {
-    isLoading.value = true
-    error.value = null
-    try {
-      const response = await stockService.getHistory(params)
-      movements.value = response.data.data.items
-      totalPages.value = response.data.data.totalPages
-      currentPage.value = response.data.data.pageNumber
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.loadHistory')
-    } finally {
-      isLoading.value = false
-    }
-  }
-
-  async function fetchWriteOffs(reason?: number) {
-    isLoading.value = true
-    error.value = null
-    try {
-      const response = await stockService.getWriteOffs({ reason })
-      return response.data.data
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.loadWriteOffs')
-    } finally {
-      isLoading.value = false
     }
   }
 
   return {
+    movements,
     isLoading,
     error,
-    movements,
-    totalPages,
-    currentPage,
+    paginationInfo,
+    fetchMovementHistory,
     registerMovement,
     registerWriteOff,
     registerRelocation,
     registerAdjustment,
-    fetchMovementHistory,
-    fetchWriteOffs,
   }
 }
