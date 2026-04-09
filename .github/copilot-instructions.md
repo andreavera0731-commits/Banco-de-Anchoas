@@ -16,41 +16,67 @@ Warehouse/inventory management system ("Banco de Anchoas") with a Vue 3 frontend
 | HTTP | Axios (JWT interceptor) | 1.13 |
 | Build | Vite | latest |
 | Tests | Vitest | 4 |
-| Icons | @mdi/font (Material Design Icons) |  |
-| Backend URL | `http://localhost:5128/api` |  |
+| Icons | @mdi/font (Material Design Icons) | |
+| Backend URL | `http://localhost:5128/api` | |
 
 ## Project Structure
 
 ```
 src/
-  assets/           # base.css (design tokens), main.css (globals, animations, utilities)
-  components/       # Shell (AppHeader, AppSidebar, AppFooter) + reusable (BaseDataTable)
-  composables/      # Shared composables (useSnackbar, useNavigation, useLoading, useNotification, useTheme)
-  features/         # Feature modules (auth/, users/, dashboard/, ...)
-    <feature>/
-      components/   # Feature-specific components (XxxFormDialog, XxxDeleteDialog)
-      composables/  # Feature-specific composables
-      services/     # API service for this feature
-      stores/       # Pinia store
-      types/        # Feature types
-      views/        # Route views (XxxView.vue)
-      __tests__/    # Unit tests
-  i18n/             # Translations (es.ts, en.ts)
-  layouts/          # AuthLayout, DefaultLayout
-  plugins/          # Vuetify config, Pinia, plugin index
-  router/           # Routes, guards
-  services/         # Shared API services (api.ts, users.service.ts, etc.)
-  types/            # Shared types (api.types.ts, auth.types.ts)
-  utils/            # Validators, formatters
-  views/            # Shared views (Home, About, Unauthorized, NotFound)
+  assets/             # base.css (design tokens), main.css (globals, animations, utilities)
+  components/         # Shell + reusable: AppHeader, AppSidebar, AppFooter, BaseDataTable
+  composables/        # ALL data composables live here (useProducts, useUsers, useCategories, etc.)
+    index.ts          # Re-exports all composables
+    useSnackbar.ts    # Feedback toast (every CRUD view uses this)
+    useNavigation.ts  # Sidebar nav items + role filtering
+    useTheme.ts       # Dark/light toggle + localStorage persistence
+    useLoading.ts     # Simple isLoading state (rarely used)
+    useNotification.ts # Global notification array (in-app, NOT API notifications)
+    useProducts.ts    # Products CRUD + pagination + barcode lookup
+    useUsers.ts       # Users CRUD (no pagination)
+    useCategories.ts  # Categories CRUD
+    useWarehouses.ts  # Warehouses + sectors CRUD
+    useStock.ts       # Stock movements, write-offs, relocations, adjustments
+    useNotifications.ts # API notifications (fetch, markAsRead, unreadCount)
+  features/           # Feature modules (views + feature-specific components)
+    auth/             # ✅ COMPLETE — Login, store, service, composable, types, tests
+    products/         # ✅ COMPLETE — List + detail + stepper form + delete dialog
+    users/            # ✅ COMPLETE — List + form dialog + delete dialog
+    categories/       # ⬜ STUB — View placeholder only
+    warehouses/       # ⬜ STUB — View placeholder only
+    stock/            # ⬜ STUB — View placeholder only
+    notifications/    # ⬜ STUB — View placeholder only
+    dashboard/        # ⬜ STUB — Unused (/ redirects to products)
+  i18n/               # index.ts + locales/ (es.ts, en.ts)
+  layouts/            # AuthLayout (login), DefaultLayout (shell with header+sidebar+footer)
+  plugins/            # vuetify.ts (theme + component defaults), pinia.ts, index.ts
+  router/             # index.ts, routes.ts (11 routes), guards.ts (auth + role check)
+  services/           # ALL API services live here (api.ts + one per entity)
+    index.ts          # Re-exports all services
+    api.ts            # Axios instance, Bearer interceptor, 401 auto-logout
+    products.service.ts, users.service.ts, categories.service.ts,
+    warehouses.service.ts, sectors.service.ts, stock.service.ts,
+    notifications.service.ts
+  stores/             # Pinia stores (only auth.store is fully implemented)
+  types/              # api.types.ts (ALL DTOs, enums, request types), auth.types.ts
+  utils/              # errors.ts, formatters.ts, validators.ts, enums.helper.ts
+  views/              # UnauthorizedView, NotFoundView (both link to products)
 ```
+
+### Key Architecture Decisions
+
+- **Services** live in `src/services/` (not inside features) — shared across the app
+- **Data composables** live in `src/composables/` (not inside features) — they wrap services
+- **Only auth** keeps its service/composable/store/types inside `src/features/auth/` (self-contained feature)
+- **Feature folders** (`src/features/<name>/`) contain only `views/` and `components/` specific to that feature
+- **Barrel exports**: `src/composables/index.ts` and `src/services/index.ts` re-export everything
 
 ## Design System Rules
 
 ### Tokens — NEVER hardcode colors or sizes
 
-- **Vuetify theme colors**: Use `rgb(var(--v-theme-primary))`, `rgb(var(--v-theme-surface))`, etc.
-- **Custom tokens** (`--bda-*`): Defined in `src/assets/base.css`. Covers typography, spacing (4px grid), radii, shadows, transitions, z-index.
+- **Vuetify theme colors**: `rgb(var(--v-theme-primary))`, `rgb(var(--v-theme-surface))`, etc.
+- **Custom tokens** (`--bda-*`): Defined in `src/assets/base.css`. Typography, spacing (4px grid), radii, shadows, transitions, z-index.
 - **Light/Dark variants**: Token values change automatically via `.v-theme--light` / `.v-theme--dark` selectors.
 
 ### Typography Scale
@@ -70,7 +96,12 @@ src/
 
 ### Component Defaults (in `plugins/vuetify.ts`)
 
-Global defaults are set for VBtn, VTextField, VSelect, VCard, VChip, VAlert, VNavigationDrawer, VDataTable, VSkeletonLoader. **Do not repeat** `variant`, `density`, `rounded` props that already match defaults.
+Global defaults are set for VBtn (`rounded="lg"`), VTextField/VSelect (`variant="outlined"`, `density="comfortable"`, `rounded="lg"`), VCard (`rounded="xl"`, `elevation=0`), VChip (`rounded="pill"`), VAlert (`variant="tonal"`, `rounded="lg"`), VNavigationDrawer (`elevation=0`), VDataTable (`hover=true`), VSkeletonLoader. **Do not repeat** props that already match defaults.
+
+### Color Palette
+
+Light: primary=#b8860b (gold), secondary=#1a1a2e, error=#c62828, success=#2e7d32, warning=#f57f17, info=#1565c0
+Dark: primary=#d4a84b, secondary=#e0e0e0, error=#ef5350
 
 ### Utility Classes (in `main.css`)
 
@@ -89,61 +120,148 @@ Global defaults are set for VBtn, VTextField, VSelect, VCard, VChip, VAlert, VNa
 ## Shell Layout Architecture
 
 ### AppHeader
-- Clean app bar without hamburger menu
-- Contains: brand logo + name, theme toggle (sun/moon), language toggle, user menu dropdown
-- Avatar initials derived from `auth.user?.name` (not email)
-- Theme switching via `theme.change(themeName)` (Vuetify 4 API)
+- Clean app bar (elevation=0, border-bottom), no hamburger menu
+- Left: app logo icon + name
+- Right: user menu dropdown card with avatar (initials from name), theme toggle (sun/moon icon), language toggle (ES↔EN), logout
+- Avatar initials: split name by whitespace, take first letter of first two words, uppercase
+- Theme switching via `useThemeToggle()` → `theme.change(themeName)` (Vuetify 4 API)
 
 ### AppSidebar
-- **Always permanent rail mode** with `expand-on-hover`
-- Collapsed: shows only icons (rail width ~56px)
-- Hover: expands to 200px showing icon + label
-- Items use `density="compact"`, minimal padding, tight icon-to-text spacing (12px gap)
-- Each nav item: `prepend-icon`, `:title`, `rounded="lg"`, `color="primary"`
-- **Role-filtered**: uses `useNavigation()` composable — items with `role` property only visible to matching roles
+- **Always permanent rail mode** with `expand-on-hover`, width=200
+- Collapsed: icon only (~56px). Hover: expands showing icon + label
+- Items: `density="compact"`, `prepend-icon`, `:title`, `rounded="lg"`, `color="primary"`
+- **Role-filtered** via `useNavigation()` composable — items with `role: 'Admin'` only visible to admins
 
 ### AppFooter
-- Ultra-compact: 24px height, `text-overline` at 0.6rem
-- Only displays copyright text
+- Ultra-compact: 24px height, `text-overline` at 0.6rem, copyright text only
 
 ### DefaultLayout
 - Stacks: AppHeader → AppSidebar + v-main → AppFooter
-- No drawer state management needed (sidebar is self-contained)
+- Both DefaultLayout and AuthLayout call `useThemeToggle().init()` on mount
 
 ## Coding Conventions
 
 1. **SFC order**: `<template>` → `<script setup lang="ts">` → `<style scoped>`
 2. **Composition API only** — no Options API
-3. **TypeScript strict** — properly type all props, emits, refs. Use `UserRole` type (not raw strings) for role fields
-4. **i18n all user-facing strings** — use `t('key')`, define keys in both `es.ts` and `en.ts`
-5. **Feature-first organization** — new features go under `src/features/<name>/`
-6. **Services return unwrapped data** — API responses follow `ApiResponse<T>` wrapper; composables unwrap `.data.data`
-7. **Auth roles**: `type UserRole = 'Admin' | 'Almacenista'` (defined in `api.types.ts`)
+3. **TypeScript strict** — properly type all props, emits, refs. Use `UserRole` type (not raw strings)
+4. **i18n all user-facing strings** — `t('key')` for strings, `tm('key')` for arrays. Define in both `es.ts` and `en.ts`
+5. **Feature-first organization** — views + components go in `src/features/<name>/`
+6. **Services return raw Axios response** — composables unwrap `.data.data`
+7. **Auth roles**: `type UserRole = 'Admin' | 'Almacenista'` (in `api.types.ts`)
 8. **User IDs are string GUIDs**, all other entity IDs are `number`
-9. **No hardcoded error messages** — `extractError()` returns `null` for unknown errors, views fallback to `t('errors.generic')`
-10. **Home route is `products`** — no dashboard. `/` redirects to `products`
+9. **Error extraction**: use shared `extractError()` from `src/utils/errors.ts` — returns `null` for unknown errors, views fallback to `t('errors.generic')`
+10. **Home route is `products`** — `/` redirects to `products`, no dashboard
 
 ## API Integration
 
 - Base Axios instance in `src/services/api.ts` with Bearer token interceptor
-- 401 responses auto-redirect to login
+- 401 responses auto-redirect to login via `authStore.logout()`
 - All API types in `src/types/api.types.ts`
-- Service modules: `categories`, `products`, `stock`, `warehouses`, `sectors`, `users`, `notifications`
-- URL params use `encodeURIComponent()` for safety
+- URL params always use `encodeURIComponent()`
+- Response wrapper: `ApiResponse<T> { data: T; message: string | null }`
+- Paginated responses: `PaginatedList<T> { items: T[]; pageNumber; totalPages; totalCount; hasPreviousPage; hasNextPage }`
+
+### Available Services
+
+| Service | Methods | Notes |
+|---------|---------|-------|
+| `productsService` | getAll(params?), getById, getByBarcode, getLowStock, getExpiring, create, update, delete | **Paginated** getAll with `GetProductsParams` |
+| `usersService` | getAll, create, update, delete | **Not paginated** — flat array |
+| `categoriesService` | getAll, getById, create, update, delete | Not paginated |
+| `warehousesService` | getAll, getById, create, update, delete, getSectors, createSector | Sectors are children of warehouses |
+| `sectorsService` | getById, update, delete | CRUD minus create (via warehousesService) |
+| `stockService` | registerMovement, registerWriteOff, relocate, adjust, getHistory, getWriteOffs | History is **paginated** |
+| `notificationsService` | getAll, getUnreadCount, markAsRead, markAllAsRead | **Paginated** getAll |
 
 ## Auth & Guards
 
-- Auth guard in `src/router/guards.ts` loads user profile BEFORE checking roles
-- Routes declare `meta: { requiresAuth: true, role?: UserRole }`
-- On 403 → redirect to `unauthorized` view
-- On 404 → redirect to `notFound` view
-- Both views link back to `products` (not dashboard)
+- Auth store (`src/features/auth/stores/auth.store.ts`): `user`, `token`, `isAuthenticated`, `userRole`, `setSession()`, `logout()`, `hasRole(role)`
+- Auth guard in `src/router/guards.ts`:
+  1. No token + requiresAuth → redirect to `login`
+  2. Authenticated going to login → redirect to `products`
+  3. Authenticated but no user profile → fetch it (or logout on failure)
+  4. Route has `meta.role` → check `hasRole()`, else redirect to `unauthorized`
+- Routes declare `meta: { requiresAuth: true, role?: UserRole, layout: 'default' | 'auth' }`
 
 ---
 
-## CRUD Implementation Pattern (Canonical Reference: Users)
+## Shared Utilities
 
-All CRUD modules MUST follow this architecture. The Users module (`src/features/users/`) is the canonical reference.
+### `src/utils/errors.ts` — Error Extraction
+
+```ts
+import type { AxiosError } from 'axios'
+
+interface ApiErrorData {
+  message?: string
+  errors?: string | Record<string, string[]>
+}
+
+export function extractError(err: unknown): string | null {
+  const axiosErr = err as AxiosError<ApiErrorData>
+  const data = axiosErr?.response?.data
+  return data?.message ?? (typeof data?.errors === 'string' ? data.errors : null) ?? null
+}
+```
+
+Used by data composables to extract error messages without importing i18n. Returns `null` on unknown errors — views provide i18n fallback.
+
+### `src/utils/formatters.ts` — Display Formatters
+
+| Function | Signature | Returns |
+|----------|-----------|---------|
+| `formatDate` | `(date: string \| Date)` | `DD/MM/YYYY` |
+| `formatDateTime` | `(date: string \| Date)` | `DD/MM/YYYY HH:mm` |
+| `formatCurrency` | `(amount, locale?, currency?)` | Formatted currency string |
+| `formatNumber` | `(num, decimals?)` | Formatted number (es-ES) |
+| `capitalize` | `(str)` | First letter uppercase |
+| `truncate` | `(str, maxLength)` | Truncated with `...` |
+| `formatRelativeTime` | `(date, t)` | `"hace X minutos"` etc. |
+| `getStockColor` | `(stock, minimumStock)` | `'error'` if low, else `'success'` |
+
+### `src/utils/validators.ts` — Validation Rules
+
+Pure functions: `isValidEmail(email)`, `isValidPassword(password)`, `isRequired(value)`
+
+Composable `useValidationRules()` returns Vuetify-compatible rule arrays:
+- `rules.email` — required + valid format
+- `rules.password` — required + min 8 chars
+- `rules.required` — non-empty
+- `rules.numberMin(min)` — required + >= min
+- `rules.numberPositive` — required + > 0
+- `rules.selectRequired` — not null/undefined/empty
+
+### `src/utils/enums.helper.ts` — Enum Label Helpers
+
+- `getNotificationTypeColor(type: number)` → Vuetify color string (pure function)
+- `useEnumLabels()` composable → returns i18n-aware label getters for all enums:
+  `getMovementTypeLabel`, `getAdjustmentTypeLabel`, `getMovementReasonLabel`, `getNotificationTypeLabel`, `getOrderStatusLabel`, `getUserRoleLabel`, `getProductUnitLabel`
+
+---
+
+## CRUD Patterns — Two Variants
+
+The project uses two CRUD patterns depending on complexity. When building a new screen, choose the appropriate variant.
+
+### Pattern A: Simple CRUD (Reference: Users)
+
+Use for entities with few fields, no pagination, flat form. Files: `UsersView.vue`, `UserFormDialog.vue`, `UserDeleteDialog.vue`, `useUsers.ts`, `users.service.ts`.
+
+### Pattern B: Complex CRUD (Reference: Products)
+
+Use for entities with many fields, server pagination, multi-step form, detail view. Files: `ProductsView.vue`, `ProductDetailView.vue`, `ProductFormStepper.vue`, `ProductDeleteDialog.vue`, `useProducts.ts`, `products.service.ts`.
+
+| Aspect | Pattern A (Simple) | Pattern B (Complex) |
+|--------|-------------------|---------------------|
+| **Pagination** | None — flat array | Server-side `PaginatedList<T>` |
+| **Form dialog** | Single `FormDialog` (max-width=520) | Multi-step `FormStepper` (max-width=800) |
+| **Detail view** | None | Separate `<Entity>DetailView.vue` |
+| **List DTO vs Full DTO** | Same type for list and edit | `ProductListDto` (table) vs `ProductDto` (detail/edit) |
+| **Edit flow** | Open dialog with list item data | Fetch full detail via `fetchProduct(id)` then open stepper |
+| **Special getters** | None | byBarcode, lowStock, expiring |
+| **Filter UI** | Search only | Search + category chip filter |
+
+---
 
 ### 1. Service Layer (`src/services/<entity>.service.ts`)
 
@@ -155,13 +273,14 @@ export const entityService = {
   getAll() {
     return api.get<ApiResponse<EntityDto[]>>('/endpoint')
   },
+  // For paginated: getAll(params?) → api.get<ApiResponse<PaginatedList<EntityListDto>>>('/endpoint', { params })
   create(data: CreateEntityRequest) {
-    return api.post<ApiResponse<string>>('/endpoint', data)
+    return api.post<ApiResponse<number>>('/endpoint', data)
   },
-  update(id: string | number, data: UpdateEntityRequest) {
+  update(id: number, data: UpdateEntityRequest) {
     return api.put(`/endpoint/${encodeURIComponent(id)}`, data)
   },
-  delete(id: string | number) {
+  delete(id: number) {
     return api.delete(`/endpoint/${encodeURIComponent(id)}`)
   },
 }
@@ -170,19 +289,16 @@ export const entityService = {
 **Rules:**
 - Plain object with methods, not a class
 - Always `encodeURIComponent()` on URL params
-- Type the response shape with `ApiResponse<T>`
+- Type response with `ApiResponse<T>` or `ApiResponse<PaginatedList<T>>`
+- Register in `src/services/index.ts` barrel export
 
 ### 2. Data Composable (`src/composables/use<Entity>.ts`)
 
 ```ts
 import { ref } from 'vue'
 import { entityService } from '@/services/entity.service'
+import { extractError } from '@/utils/errors'
 import type { EntityDto } from '@/types/api.types'
-
-function extractError(err: unknown): string | null {
-  const res = (err as any)?.response?.data
-  return res?.message ?? res?.errors ?? null
-}
 
 export function useEntity() {
   const items = ref<EntityDto[]>([])
@@ -212,158 +328,297 @@ export function useEntity() {
       throw err // re-throw so the view catch block runs
     }
   }
-
-  // updateItem, deleteItem follow the same try/catch/throw pattern
+  // updateItem, deleteItem follow the same pattern
 
   return { items, isLoading, error, fetchItems, createItem, updateItem, deleteItem }
 }
 ```
 
 **Rules:**
-- NO `useI18n()` inside data composables — keep them i18n-free
-- `extractError()` returns `null` for unknown errors (never hardcoded English)
-- Mutations (create/update/delete) always call `fetchItems()` to refresh, then `throw err` so the view can react
-- `fetchItems()` sets `isLoading` — mutations don't (views manage their own loading refs)
-- Each composable returns `{ items, isLoading, error, ...methods }`
+- Import `extractError` from `src/utils/errors.ts` — do NOT define locally
+- NO `useI18n()` inside data composables — keep them i18n-free (views provide i18n fallbacks)
+- Mutations always call `fetchItems()` to refresh, then `throw err`
+- `fetchItems()` manages `isLoading` — mutations don't (views have their own `formLoading`/`deleteLoading` refs)
+- Register in `src/composables/index.ts` barrel export
 
-### 3. Snackbar Composable (`src/composables/useSnackbar.ts`)
+**For paginated composables** (see `useProducts.ts`):
+- Track `pageNumber`, `pageSize`, `totalCount`, `totalPages` as refs
+- Expose `paginationInfo` as computed
+- Store `lastParams` so mutations re-fetch the same page/filter context
+- Secondary getters (e.g. `fetchByBarcode`) should NOT set the shared `isLoading`
 
-Reusable notification state. Every CRUD view uses this — no manual refs.
+### 3. View Layer (`src/features/<entity>/views/<Entity>View.vue`)
 
-```ts
-const snackbar = useSnackbar()
-snackbar.show(t('entity.createSuccess'))           // green success
-snackbar.show(error.value ?? t('errors.generic'), 'error')  // red error
-```
-
-### 4. View Layer (`src/features/<entity>/views/<Entity>View.vue`)
-
-Structure:
-
-```
+```html
 <v-container fluid>
-  <!-- Page header: avatar + title + subtitle -->
+  <!-- Page header: v-avatar (primary, tonal) + icon + title + subtitle -->
   <div class="page-header">...</div>
 
   <v-row style="margin-top: 32px;">
-    <!-- Left: BaseDataTable with toolbar, skeleton, empty, column slots -->
+    <!-- Left: BaseDataTable -->
     <v-col cols="12" lg="8">
-      <BaseDataTable ...>
-        <template #toolbar>search + create button</template>
+      <BaseDataTable :headers="headers" :items="items" :search="search" :loading="isLoading">
+        <template #toolbar>
+          <v-text-field v-model="search" ... style="max-width: 280px" />
+          <v-spacer />
+          <v-btn color="primary" @click="openCreate">{{ t('entity.createEntity') }}</v-btn>
+        </template>
         <template #empty>icon + message + create button</template>
-        <template #item.columnName="{ item }">custom cell</template>
+        <template #item.columnName="{ item }">custom cell rendering</template>
       </BaseDataTable>
+      <!-- For paginated: v-pagination below table (only if totalPages > 1) -->
     </v-col>
 
-    <!-- Right: info panel (optional) -->
-    <v-col cols="12" lg="4">...</v-col>
+    <!-- Right: info panel -->
+    <v-col cols="12" lg="4">
+      <div class="info-panel">
+        <div class="info-section">
+          <v-avatar ...> <v-icon ... /> </v-avatar>
+          <span>Section title</span>
+        </div>
+        <p>Description</p>
+        <ul class="info-list">
+          <li v-for="item in tm('entity.infoItems')" :key="item">{{ item }}</li>
+        </ul>
+      </div>
+    </v-col>
   </v-row>
 
+  <!-- Snackbar — ALWAYS present -->
   <v-snackbar v-model="snackbar.visible.value" :color="snackbar.color.value" location="top end" :timeout="3000">
     {{ snackbar.message.value }}
   </v-snackbar>
 
+  <!-- Dialogs -->
   <EntityFormDialog v-model="formDialog" :entity="selectedItem" :loading="formLoading" @submit="handleSubmit" />
   <EntityDeleteDialog v-model="deleteDialog" :entity="selectedItem" :loading="deleteLoading" @confirm="handleDelete" />
 </v-container>
 ```
 
 **Rules:**
-- Headers are `computed()` (for i18n reactivity)
-- `onMounted(fetchItems)` to load data on page enter
+- Headers are `computed()` for i18n reactivity
+- `onMounted(fetchItems)` to load data
 - `formLoading` and `deleteLoading` are separate refs managed by the view
 - Error handling: `catch { snackbar.show(error.value ?? t('errors.generic'), 'error') }`
-- Close dialog on success: `formDialog.value = false`
+- Success: close dialog + `snackbar.show(t('entity.xxxSuccess'))`
 - `finally { formLoading.value = false }`
+- Info panel uses `.info-panel`, `.info-section`, `.info-list` CSS classes (see existing views for exact styles)
+- Info panel content: array translations via `tm('entity.infoItems')`, NOT `t()`
+- Admin-only actions: check `auth.hasRole('Admin')` before showing delete buttons
 
-### 5. Form Dialog (`src/features/<entity>/components/<Entity>FormDialog.vue`)
+### 4. Form Dialog — Simple (`<Entity>FormDialog.vue`)
 
-```
-<v-dialog :model-value="modelValue" max-width="520" persistent @update:model-value="$emit(...)">
+```html
+<v-dialog :model-value="modelValue" max-width="520" persistent @update:model-value="$emit('update:modelValue', $event)">
   <v-card rounded="lg">
-    <v-card-title> avatar + title (create vs edit) </v-card-title>
-    <v-card-text> <v-form> fields with validation rules </v-form> </v-card-text>
-    <v-card-actions> cancel + submit button with :loading </v-card-actions>
+    <v-card-title class="d-flex align-center ga-3">
+      <v-avatar color="primary" variant="tonal" size="32"><v-icon ... /></v-avatar>
+      {{ isEditing ? t('entity.editEntity') : t('entity.createEntity') }}
+    </v-card-title>
+    <v-card-text>
+      <v-form ref="formRef" class="d-flex flex-column ga-5" @submit.prevent>
+        <!-- fields with :rules="rules.xxx" -->
+      </v-form>
+    </v-card-text>
+    <v-card-actions class="px-6 pb-4">
+      <v-spacer />
+      <v-btn @click="close">{{ t('entity.cancel') }}</v-btn>
+      <v-btn color="primary" :loading="loading" @click="submit">
+        {{ isEditing ? t('entity.save') : t('entity.create') }}
+      </v-btn>
+    </v-card-actions>
   </v-card>
 </v-dialog>
 ```
 
 **Rules:**
 - Always `persistent` — prevent accidental close
-- `max-width="520"`, `rounded="lg"` on the card
-- Title has `v-avatar` tonal with icon + text
-- Form uses `ga-5` (gap 20px) between fields
-- `watch(() => props.modelValue)` to reset form and validation on open
-- `isEditing` derived from `!!props.entity`
-- Emit typed data (use proper TypeScript types like `UserRole`, not `string`)
+- Title: `v-avatar` tonal + icon + create/edit text
+- Form `ga-5` gap between fields
+- `watch(() => props.modelValue)` to reset form + validation on open
+- `isEditing = computed(() => !!props.entity)`
+- Emit typed data (use `UserRole` type, not `string`)
 - Validation via `useValidationRules()` from `src/utils/validators.ts`
 
-### 6. Delete Dialog (`src/features/<entity>/components/<Entity>DeleteDialog.vue`)
+### 5. Form Stepper — Complex (`<Entity>FormStepper.vue`)
 
-```
-<v-dialog :model-value="modelValue" max-width="400" persistent @update:model-value="$emit(...)">
+Used when forms have 3+ logical groups (e.g. Products has 4 steps).
+
+```html
+<v-dialog :model-value="modelValue" max-width="800" persistent @update:model-value="$emit(...)">
   <v-card rounded="lg">
-    <v-card-title> error avatar + "Delete entity" </v-card-title>
-    <v-card-text> confirmation message with interpolated {name} </v-card-text>
-    <v-card-actions> cancel + delete button (color="error", :loading) </v-card-actions>
+    <v-card-title>avatar + title</v-card-title>
+    <v-card-text class="pt-3">
+      <v-stepper v-model="currentStep" flat>
+        <v-stepper-header> <v-stepper-item ... /> per step </v-stepper-header>
+        <v-stepper-window>
+          <v-stepper-window-item :value="1">
+            <v-form ref="step1Ref" class="d-flex flex-column ga-4">...</v-form>
+          </v-stepper-window-item>
+          <!-- more steps -->
+        </v-stepper-window>
+      </v-stepper>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn v-if="currentStep > 1" @click="currentStep--">{{ t('entity.back') }}</v-btn>
+      <v-spacer />
+      <v-btn @click="close">{{ t('entity.cancel') }}</v-btn>
+      <v-btn v-if="currentStep < totalSteps" color="primary" @click="goNext">{{ t('entity.next') }}</v-btn>
+      <v-btn v-else color="primary" :loading="loading" @click="submit">{{ submitLabel }}</v-btn>
+    </v-card-actions>
   </v-card>
 </v-dialog>
 ```
 
 **Rules:**
-- Always `persistent` — prevent close during loading
-- `max-width="400"`, `rounded="lg"` on the card
-- Error-colored avatar in title
-- Interpolated name: `t('entity.confirmDelete', { name: entity?.name ?? '' })`
-- Emit `confirm` event (no data needed — view has `selectedItem`)
+- `max-width="800"`, form gap `ga-4`, card-text `pt-3`
+- One `v-form` ref per step for step-level validation
+- `goNext()` validates current step before advancing
+- `isEditing = computed(() => !!props.entity)` or from dynamic data (e.g. barcode lookup match)
+- Stepper fields: all `v-select` have `:menu-props="{ location: 'top' }"` to open upward
+- Dependent dropdowns: load child data on parent change (e.g. sectors when warehouse changes)
+- Watch `modelValue` to reset ALL steps and state on dialog open
+- Read-only fields on edit where business rules apply (e.g. stock field)
+
+### 6. Delete Dialog (`<Entity>DeleteDialog.vue`)
+
+```html
+<v-dialog :model-value="modelValue" max-width="400" persistent @update:model-value="$emit(...)">
+  <v-card rounded="lg">
+    <v-card-title class="d-flex align-center ga-3">
+      <v-avatar color="error" variant="tonal" size="32"><v-icon icon="mdi-alert" /></v-avatar>
+      {{ t('entity.deleteEntity') }}
+    </v-card-title>
+    <v-card-text>
+      {{ t('entity.confirmDelete', { name: entity?.name ?? '' }) }}
+      <p class="text-medium-emphasis mt-2">{{ t('entity.confirmDeleteDescription') }}</p>
+    </v-card-text>
+    <v-card-actions class="px-6 pb-4">
+      <v-spacer />
+      <v-btn @click="close">{{ t('entity.cancel') }}</v-btn>
+      <v-btn color="error" :loading="loading" @click="$emit('confirm')">{{ t('entity.delete') }}</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+```
 
 ### 7. BaseDataTable (`src/components/BaseDataTable.vue`)
 
-Reusable wrapper that handles:
-- **Skeleton loading**: Shown when `loading && items.length === 0` (initial load only)
-- **Empty state**: Shown when `items.length === 0 && !loading` — has `#empty` slot with fallback icon
-- **Table**: Vuetify `v-data-table` with consistent bordered styling
-- **Toolbar**: `#toolbar` slot for search/actions above the table
+Reusable table wrapper with skeleton loading, empty state, and toolbar.
 
-Props: `headers`, `items`, `search`, `loading`, `noDataText`, `itemsPerPage`, `skeletonRows` (default: 5)
-
-Pass-through: All `$attrs` forwarded to `v-data-table`. Column slots like `#item.xxx` work directly.
+**Props:** `headers`, `items`, `search`, `loading`, `noDataText`, `itemsPerPage`, `skeletonRows` (default: 5)
+**Slots:** `#toolbar`, `#empty`, `#item.<columnKey>` (pass-through to v-data-table)
+**Behavior:** Skeleton when `loading && items.length === 0` (initial only). Empty slot when `!loading && items.length === 0`. All `$attrs` forwarded to v-data-table.
 
 ### 8. Navigation (`src/composables/useNavigation.ts`)
 
-Data-driven sidebar with role filtering:
-- `navItems`: readonly array of `NavItem` with optional `role` property
-- `filterNavItems(items, userRole)`: pure function (testable)
-- `useNavigation()`: composable returning `visibleItems` computed
+```ts
+export const navItems: readonly NavItem[] = [
+  { route: 'products', icon: 'mdi-package-variant', titleKey: 'nav.products' },
+  { route: 'stock', icon: 'mdi-swap-horizontal', titleKey: 'nav.stock' },
+  { route: 'warehouses', icon: 'mdi-warehouse', titleKey: 'nav.warehouses' },
+  { route: 'categories', icon: 'mdi-tag-multiple-outline', titleKey: 'nav.categories', role: 'Admin' },
+  { route: 'users', icon: 'mdi-account-group-outline', titleKey: 'nav.users', role: 'Admin' },
+  { route: 'notifications', icon: 'mdi-bell-outline', titleKey: 'nav.notifications' },
+]
+```
 
-To add a new nav item, just add to the `navItems` array. Items with `role: 'Admin'` are only shown to admins.
+- `filterNavItems(items, userRole)`: pure function (exported for unit testing)
+- `useNavigation()`: returns `{ visibleItems, navItems }`
+- To add a new nav item, add to the `navItems` array
 
 ---
 
 ## i18n Conventions
 
-- Every feature has a top-level key in both `es.ts` and `en.ts` (e.g., `users: { ... }`)
-- CRUD keys follow this naming pattern:
-  - `title`, `subtitle` — page header
-  - `createEntity`, `editEntity`, `deleteEntity` — dialog titles
-  - `name`, `email`, etc. — field labels
-  - `search` — search placeholder
-  - `noEntity` — empty state (no data at all)
-  - `noResults` — no search matches
-  - `confirmDelete` — delete confirmation with `{name}` interpolation
-  - `confirmDeleteDescription` — secondary explanation
-  - `createSuccess`, `updateSuccess`, `deleteSuccess` — snackbar messages
-  - `cancel`, `save`, `create`, `delete` — button labels
-- Error keys go under `errors.` namespace: `errors.loadEntity`, `errors.generic`
-- Array translations (like permissions lists) use `tm('key')` not `t('key')`
+- Default locale: `es`, fallback: `en`. Both files must stay in sync
+- Every feature has a top-level key (e.g., `products: { ... }`, `users: { ... }`)
+- Error keys go under global `errors.` namespace: `errors.loadEntity`, `errors.create Entity`, `errors.generic`
+- Enum labels under `enums.` namespace: `enums.movementType.entry`, `enums.productUnit.kg`
+- Accessibility keys under `a11y.` namespace
+- Relative time keys under `relativeTime.` namespace
+
+### CRUD Key Naming Convention
+
+```
+<entity>.title                    # Page title
+<entity>.subtitle                 # Page subtitle
+<entity>.create<Entity>           # "Create product" dialog title
+<entity>.edit<Entity>             # "Edit product" dialog title
+<entity>.delete<Entity>           # "Delete product" dialog title
+<entity>.name, .email, etc.       # Field labels
+<entity>.search                   # Search placeholder
+<entity>.no<Entity>s              # Empty state: "No products registered"
+<entity>.noResults                # No search matches
+<entity>.confirmDelete            # Delete confirmation with {name} interpolation
+<entity>.confirmDeleteDescription # Secondary delete explanation
+<entity>.createSuccess            # Snackbar: "Product created successfully"
+<entity>.updateSuccess            # Snackbar: "Product updated successfully"
+<entity>.deleteSuccess            # Snackbar: "Product deleted successfully"
+<entity>.cancel, .save, .create, .delete  # Button labels
+<entity>.infoTitle                # Info panel title
+<entity>.infoDescription          # Info panel description
+<entity>.infoHowTitle             # Info panel section heading
+<entity>.infoHowItems             # Info panel items (ARRAY — use tm(), not t())
+<entity>.infoRulesTitle           # Info panel "Important" section heading
+<entity>.infoRulesItems           # Info panel rules (ARRAY — use tm(), not t())
+```
+
+## Routes
+
+```ts
+// All routes use layout: 'default' except login and unauthorized which use 'auth'
+{ path: '/', redirect: { name: 'products' } }
+{ path: '/login', name: 'login', layout: 'auth' }
+{ path: '/products', name: 'products', requiresAuth: true }
+{ path: '/products/:id', name: 'product-detail', requiresAuth: true }
+{ path: '/stock', name: 'stock', requiresAuth: true }
+{ path: '/warehouses', name: 'warehouses', requiresAuth: true }
+{ path: '/categories', name: 'categories', requiresAuth: true, role: 'Admin' }
+{ path: '/users', name: 'users', requiresAuth: true, role: 'Admin' }
+{ path: '/notifications', name: 'notifications', requiresAuth: true }
+{ path: '/unauthorized', name: 'unauthorized', layout: 'auth' }
+{ path: '/:pathMatch(.*)*', name: 'not-found' }
+```
+
+## API Types (Key Shapes in `src/types/api.types.ts`)
+
+```ts
+type UserRole = 'Admin' | 'Almacenista'
+type ProductUnit = 'kg' | 'g' | 'un' | 'lt' | 'ml'
+enum MovementType { Entry = 0, Exit = 1, WriteOff = 2, Relocation = 3, Adjustment = 4 }
+enum AdjustmentType { Increase = 0, Decrease = 1 }
+enum MovementReason { Expiration = 0, Damage = 1, Loss = 2, Other = 3 }
+enum NotificationType { LowStock = 0, Expiring = 1, Expired = 2 }
+
+// Products have TWO DTOs:
+interface ProductListDto { id, name, sku, barcode?, unit, stock, minimumStock, categoryName }
+interface ProductDto { ...all fields including price, supplier, expirationDate, defaultSectorId, etc. }
+
+// Users:
+interface UserDto { id: string, email, name, role: UserRole, isActive }
+```
 
 ## Testing
 
 - Vitest with `happy-dom` environment
-- Test files collocated: `__tests__/` inside each feature or composable folder
-- Currently 19 passing tests across 4 test files
+- Test files: `__tests__/` inside each feature or composable folder
 - Run: `npx vitest run`
-- Pure functions exported alongside composables for easier unit testing (e.g., `filterNavItems`)
+- Pure functions exported alongside composables for unit testing (e.g., `filterNavItems`, `isValidEmail`)
+
+## Implementation Status
+
+| Feature | View | Service | Composable | Components | Status |
+|---------|------|---------|------------|------------|--------|
+| Auth | LoginView | ✅ | ✅ useAuth | LoginForm | ✅ Complete |
+| Products | ProductsView + ProductDetailView | ✅ | ✅ useProducts | ProductFormStepper, ProductDeleteDialog | ✅ Complete |
+| Users | UsersView | ✅ | ✅ useUsers | UserFormDialog, UserDeleteDialog | ✅ Complete |
+| Categories | ⬜ Stub | ✅ | ✅ useCategories | — | Service + composable ready, needs view |
+| Warehouses | ⬜ Stub | ✅ | ✅ useWarehouses | — | Service + composable ready, needs view |
+| Stock | ⬜ Stub | ✅ | ✅ useStock | — | Service + composable ready, needs view |
+| Notifications | ⬜ Stub | ✅ | ✅ useNotifications | — | Service + composable ready, needs view |
+
+Stub views are placeholders with only an icon + `t('<entity>.placeholder')` text.
 
 ## Do NOT
 
@@ -374,6 +629,9 @@ To add a new nav item, just add to the `navItems` array. Items with `role: 'Admi
 - Skip i18n for visible text
 - Add features, abstractions, or refactors beyond what was asked
 - Use `useI18n()` inside data composables — keep i18n in views/components only
-- Hardcode error strings in composables — return `null` and let views provide i18n fallbacks
+- Hardcode error strings in composables — use shared `extractError()` from `src/utils/errors.ts`
 - Use `as any` casts — properly type data from the start
 - Use deprecated `theme.global.name.value` — use `theme.change()` for Vuetify 4
+- Define `extractError` locally in composables — import from `src/utils/errors.ts`
+- Put data composables inside feature folders — they live in `src/composables/`
+- Put services inside feature folders — they live in `src/services/`
