@@ -73,13 +73,13 @@
           </template>
 
           <template #item.name="{ item }">
-            <router-link
-              :to="{ name: 'product-detail', params: { id: item.id } }"
+            <a
               class="text-decoration-none font-weight-medium"
-              style="color: rgb(var(--v-theme-primary));"
+              style="color: rgb(var(--v-theme-primary)); cursor: pointer;"
+              @click="selectProduct(item.id as number)"
             >
               {{ item.name }}
-            </router-link>
+            </a>
           </template>
 
           <template #item.stock="{ item }">
@@ -100,7 +100,7 @@
                 size="x-small"
                 variant="text"
                 color="primary"
-                :to="{ name: 'product-detail', params: { id: item.id } }"
+                @click="selectProduct(item.id as number)"
               />
               <v-btn
                 icon="mdi-pencil-outline"
@@ -134,9 +134,21 @@
         </div>
       </v-col>
 
-      <!-- Right: Info panel -->
+      <!-- Right: Info / Detail panel -->
       <v-col cols="12" lg="4">
-        <div class="info-panel">
+        <!-- Product detail panel -->
+        <ProductDetailPanel
+          v-if="panelProduct !== null || panelLoading"
+          :product="panelProduct"
+          :loading="panelLoading"
+          :show-delete="auth.hasRole('Admin')"
+          @close="closePanel"
+          @edit="openPanelEdit"
+          @delete="openPanelDelete"
+        />
+
+        <!-- Default info panel -->
+        <div v-else class="info-panel">
           <div class="info-panel-header">
             <v-icon icon="mdi-lightbulb-outline" size="20" color="primary" />
             <span class="text-body-1 font-weight-bold">{{ t('products.infoTitle') }}</span>
@@ -217,6 +229,7 @@ import { getStockColor } from '@/utils/formatters'
 import BaseDataTable from '@/components/BaseDataTable.vue'
 import ProductFormStepper from '../components/ProductFormStepper.vue'
 import ProductDeleteDialog from '../components/ProductDeleteDialog.vue'
+import ProductDetailPanel from '../components/ProductDetailPanel.vue'
 
 const { t, tm } = useI18n()
 const auth = useAuthStore()
@@ -242,6 +255,10 @@ const selectedProduct = ref<ProductDto | null>(null)
 const selectedListProduct = ref<ProductListDto | null>(null)
 const formLoading = ref(false)
 const deleteLoading = ref(false)
+
+// Detail panel
+const panelProduct = ref<ProductDto | null>(null)
+const panelLoading = ref(false)
 
 // Category filter options
 const categoryOptions = ref<CategoryDto[]>([])
@@ -279,6 +296,45 @@ function onPageChange(page: number) {
   })
 }
 
+async function selectProduct(id: number) {
+  panelLoading.value = true
+  panelProduct.value = null
+  try {
+    const detail = await fetchProduct(id)
+    panelProduct.value = detail ?? null
+  } catch {
+    snackbar.show(error.value ?? t('errors.generic'), 'error')
+    panelLoading.value = false
+  } finally {
+    panelLoading.value = false
+  }
+}
+
+function closePanel() {
+  panelProduct.value = null
+}
+
+function openPanelEdit() {
+  if (!panelProduct.value) return
+  selectedProduct.value = panelProduct.value
+  formDialog.value = true
+}
+
+function openPanelDelete() {
+  if (!panelProduct.value) return
+  selectedListProduct.value = {
+    id: panelProduct.value.id,
+    name: panelProduct.value.name,
+    sku: panelProduct.value.sku,
+    barcode: panelProduct.value.barcode,
+    unit: panelProduct.value.unit,
+    stock: panelProduct.value.stock,
+    minimumStock: panelProduct.value.minimumStock,
+    categoryName: panelProduct.value.categoryName,
+  }
+  deleteDialog.value = true
+}
+
 function openCreate() {
   selectedProduct.value = null
   formDialog.value = true
@@ -310,6 +366,11 @@ async function handleSubmit(data: CreateProductRequest | UpdateProductRequest) {
     if ('id' in data) {
       await updateProduct(data.id, data as UpdateProductRequest)
       snackbar.show(t('products.updateSuccess'))
+      // Refresh panel if this product is shown
+      if (panelProduct.value?.id === data.id) {
+        const detail = await fetchProduct(data.id)
+        panelProduct.value = detail ?? null
+      }
     } else {
       await createProduct(data as CreateProductRequest)
       snackbar.show(t('products.createSuccess'))
@@ -329,6 +390,10 @@ async function handleDelete() {
     await deleteProduct(selectedListProduct.value.id)
     snackbar.show(t('products.deleteSuccess'))
     deleteDialog.value = false
+    // Close panel if deleted product was shown
+    if (panelProduct.value?.id === selectedListProduct.value.id) {
+      panelProduct.value = null
+    }
   } catch {
     snackbar.show(error.value ?? t('errors.generic'), 'error')
   } finally {

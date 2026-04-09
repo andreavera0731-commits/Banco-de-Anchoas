@@ -18,12 +18,6 @@ export const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true, layout: 'default' },
   },
   {
-    path: '/products/:id',
-    name: 'product-detail',
-    component: () => import('@/features/products/views/ProductDetailView.vue'),
-    meta: { requiresAuth: true, layout: 'default' },
-  },
-  {
     path: '/stock',
     name: 'stock',
     component: () => import('@/features/stock/views/StockView.vue'),

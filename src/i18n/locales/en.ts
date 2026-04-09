@@ -123,6 +123,7 @@ export default {
     noExpiration: 'No expiration',
     noSector: 'No sector assigned',
     lowStockWarning: 'Low stock',
+    detailTitle: 'Product detail',
     // Optional field hints
     optional: '(optional)',
     stockReadonly: 'Stock can only be modified through movements.',
@@ -133,7 +134,7 @@ export default {
     infoHowItems: [
       'The SKU code is auto-generated when creating a product',
       'You can scan or type a barcode to search for existing products',
-      'Click on a product name to view its full details',
+      'Click on a product name or the eye icon to see its details here',
       'Use categories to filter and organize your products',
     ],
     infoRulesTitle: 'Important',

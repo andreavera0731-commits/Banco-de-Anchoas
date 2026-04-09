@@ -123,6 +123,7 @@ export default {
     noExpiration: 'Sin vencimiento',
     noSector: 'Sin sector asignado',
     lowStockWarning: 'Stock bajo',
+    detailTitle: 'Detalle del producto',
     // Optional field hints
     optional: '(opcional)',
     stockReadonly: 'El stock solo se modifica mediante movimientos.',
@@ -133,7 +134,7 @@ export default {
     infoHowItems: [
       'El código SKU se genera automáticamente al crear un producto',
       'Puedes escanear o escribir un código de barras para buscar productos existentes',
-      'Haz clic en el nombre de un producto para ver su ficha completa',
+      'Haz clic en el nombre o el icono de ojo para ver el detalle aquí',
       'Usa las categorías para filtrar y organizar tus productos',
     ],
     infoRulesTitle: 'Importante',
