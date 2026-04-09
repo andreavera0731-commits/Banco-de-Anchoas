@@ -151,7 +151,72 @@ export default {
   },
   warehouses: {
     title: 'Almacenes',
-    placeholder: 'La gestión de almacenes se mostrará aquí.',
+    subtitle: 'Gestiona los almacenes y sus sectores para organizar el inventario.',
+    createWarehouse: 'Crear almacén',
+    editWarehouse: 'Editar almacén',
+    deleteWarehouse: 'Eliminar almacén',
+    // Field labels
+    name: 'Nombre',
+    location: 'Ubicación',
+    createdAt: 'Fecha de creación',
+    actions: 'Acciones',
+    // Search & empty
+    search: 'Buscar almacenes...',
+    noWarehouses: 'No hay almacenes registrados.',
+    noResults: 'No se encontraron almacenes.',
+    // Delete
+    confirmDelete: '¿Estás seguro de que deseas eliminar {name}?',
+    confirmDeleteDescription: 'Se eliminarán todos los sectores asociados a este almacén.',
+    // Snackbar
+    createSuccess: 'Almacén creado correctamente.',
+    updateSuccess: 'Almacén actualizado correctamente.',
+    deleteSuccess: 'Almacén eliminado correctamente.',
+    // Buttons
+    cancel: 'Cancelar',
+    save: 'Guardar',
+    create: 'Crear',
+    delete: 'Eliminar',
+    // Optional
+    optional: '(opcional)',
+    // Sectors
+    sectors: 'Sectores',
+    sectorsOf: 'Sectores de {name}',
+    createSector: 'Crear sector',
+    editSector: 'Editar sector',
+    deleteSector: 'Eliminar sector',
+    noSectors: 'Este almacén no tiene sectores.',
+    sectorName: 'Nombre del sector',
+    sectorCategories: 'Categorías',
+    sectorConfirmDelete: '¿Estás seguro de que deseas eliminar el sector {name}?',
+    sectorConfirmDeleteDescription: 'Los productos en este sector quedarán sin ubicación asignada.',
+    sectorCreateSuccess: 'Sector creado correctamente.',
+    sectorUpdateSuccess: 'Sector actualizado correctamente.',
+    sectorDeleteSuccess: 'Sector eliminado correctamente.',
+    selectWarehouse: 'Selecciona un almacén para ver sus sectores.',
+    // QR
+    viewQr: 'Ver QR',
+    qrTitle: 'Código QR del sector',
+    qrWarehouse: 'Almacén',
+    qrSector: 'Sector',
+    qrPrint: 'Imprimir',
+    qrClose: 'Cerrar',
+    // Info panel
+    infoTitle: '¿Cómo funciona?',
+    infoDescription: 'Los almacenes organizan tu inventario en ubicaciones físicas con sectores específicos.',
+    infoHowTitle: 'Gestión de almacenes',
+    infoHowItems: [
+      'Crea almacenes para representar tus ubicaciones físicas',
+      'Añade sectores dentro de cada almacén',
+      'Los sectores agrupan productos por zona o categoría',
+      'Asigna productos a sectores específicos',
+    ],
+    infoRulesTitle: 'Importante',
+    infoRulesItems: [
+      'Cada almacén puede tener múltiples sectores',
+      'Eliminar un almacén elimina todos sus sectores',
+      'Los productos deben asignarse a un sector',
+      'Los nombres de almacén deben ser únicos',
+    ],
   },
   categories: {
     title: 'Categorías',

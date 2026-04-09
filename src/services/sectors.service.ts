@@ -7,14 +7,14 @@ import type {
 
 export const sectorsService = {
   getById(id: number) {
-    return api.get<ApiResponse<SectorDto>>(`/sectors/${id}`)
+    return api.get<ApiResponse<SectorDto>>(`/sectors/${encodeURIComponent(id)}`)
   },
 
   update(id: number, data: UpdateSectorRequest) {
-    return api.put(`/sectors/${id}`, data)
+    return api.put(`/sectors/${encodeURIComponent(id)}`, data)
   },
 
   delete(id: number) {
-    return api.delete(`/sectors/${id}`)
+    return api.delete(`/sectors/${encodeURIComponent(id)}`)
   },
 }

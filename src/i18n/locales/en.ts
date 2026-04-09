@@ -151,7 +151,72 @@ export default {
   },
   warehouses: {
     title: 'Warehouses',
-    placeholder: 'Warehouse management will be displayed here.',
+    subtitle: 'Manage warehouses and their sectors to organize your inventory.',
+    createWarehouse: 'Create warehouse',
+    editWarehouse: 'Edit warehouse',
+    deleteWarehouse: 'Delete warehouse',
+    // Field labels
+    name: 'Name',
+    location: 'Location',
+    createdAt: 'Created at',
+    actions: 'Actions',
+    // Search & empty
+    search: 'Search warehouses...',
+    noWarehouses: 'No warehouses registered.',
+    noResults: 'No warehouses found.',
+    // Delete
+    confirmDelete: 'Are you sure you want to delete {name}?',
+    confirmDeleteDescription: 'All sectors associated with this warehouse will be deleted.',
+    // Snackbar
+    createSuccess: 'Warehouse created successfully.',
+    updateSuccess: 'Warehouse updated successfully.',
+    deleteSuccess: 'Warehouse deleted successfully.',
+    // Buttons
+    cancel: 'Cancel',
+    save: 'Save',
+    create: 'Create',
+    delete: 'Delete',
+    // Optional
+    optional: '(optional)',
+    // Sectors
+    sectors: 'Sectors',
+    sectorsOf: 'Sectors of {name}',
+    createSector: 'Create sector',
+    editSector: 'Edit sector',
+    deleteSector: 'Delete sector',
+    noSectors: 'This warehouse has no sectors.',
+    sectorName: 'Sector name',
+    sectorCategories: 'Categories',
+    sectorConfirmDelete: 'Are you sure you want to delete sector {name}?',
+    sectorConfirmDeleteDescription: 'Products in this sector will be left without an assigned location.',
+    sectorCreateSuccess: 'Sector created successfully.',
+    sectorUpdateSuccess: 'Sector updated successfully.',
+    sectorDeleteSuccess: 'Sector deleted successfully.',
+    selectWarehouse: 'Select a warehouse to view its sectors.',
+    // QR
+    viewQr: 'View QR',
+    qrTitle: 'Sector QR Code',
+    qrWarehouse: 'Warehouse',
+    qrSector: 'Sector',
+    qrPrint: 'Print',
+    qrClose: 'Close',
+    // Info panel
+    infoTitle: 'How does it work?',
+    infoDescription: 'Warehouses organize your inventory into physical locations with specific sectors.',
+    infoHowTitle: 'Warehouse management',
+    infoHowItems: [
+      'Create warehouses to represent your physical locations',
+      'Add sectors within each warehouse',
+      'Sectors group products by zone or category',
+      'Assign products to specific sectors',
+    ],
+    infoRulesTitle: 'Important',
+    infoRulesItems: [
+      'Each warehouse can have multiple sectors',
+      'Deleting a warehouse deletes all its sectors',
+      'Products must be assigned to a sector',
+      'Warehouse names must be unique',
+    ],
   },
   categories: {
     title: 'Categories',

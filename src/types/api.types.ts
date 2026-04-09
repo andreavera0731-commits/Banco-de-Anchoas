@@ -265,11 +265,13 @@ export interface SectorCategoryDto {
 export interface CreateSectorRequest {
   name: string
   warehouseId: number
+  categoryIds?: number[] | null
 }
 
 export interface UpdateSectorRequest {
   id: number
   name: string
+  categoryIds?: number[] | null
 }
 
 // ============================================================

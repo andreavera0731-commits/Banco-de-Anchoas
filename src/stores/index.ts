@@ -1,5 +1,0 @@
-export { useAuthStore } from '@/features/auth/stores/auth.store'
-export { useCategoriesStore } from './categories.store'
-export { useProductsStore } from './products.store'
-export { useNotificationsStore } from './notifications.store'
-export { useWarehousesStore } from './warehouses.store'
