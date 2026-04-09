@@ -154,7 +154,50 @@ export default {
   },
   categories: {
     title: 'Categorías',
-    placeholder: 'La gestión de categorías se mostrará aquí.',
+    subtitle: 'Organiza tus productos agrupándolos en categorías claras y funcionales.',
+    createCategory: 'Crear categoría',
+    editCategory: 'Editar categoría',
+    deleteCategory: 'Eliminar categoría',
+    // Field labels
+    name: 'Nombre',
+    description: 'Descripción',
+    createdAt: 'Fecha de creación',
+    actions: 'Acciones',
+    // Search & empty
+    search: 'Buscar categorías...',
+    noCategories: 'No hay categorías registradas.',
+    noResults: 'No se encontraron categorías.',
+    // Delete
+    confirmDelete: '¿Estás seguro de que deseas eliminar {name}?',
+    confirmDeleteDescription: 'Los productos asociados a esta categoría quedarán sin clasificar.',
+    // Snackbar
+    createSuccess: 'Categoría creada correctamente.',
+    updateSuccess: 'Categoría actualizada correctamente.',
+    deleteSuccess: 'Categoría eliminada correctamente.',
+    // Buttons
+    cancel: 'Cancelar',
+    save: 'Guardar',
+    create: 'Crear',
+    delete: 'Eliminar',
+    // Optional
+    optional: '(opcional)',
+    // Info panel
+    infoTitle: '¿Cómo funciona?',
+    infoDescription: 'Las categorías te permiten clasificar y organizar los productos de tu almacén.',
+    infoHowTitle: 'Gestión de categorías',
+    infoHowItems: [
+      'Crea categorías para agrupar productos por tipo o familia',
+      'Edita el nombre o la descripción en cualquier momento',
+      'Filtra productos por categoría en la pantalla de productos',
+      'Cada producto debe pertenecer a una categoría',
+    ],
+    infoRulesTitle: 'Importante',
+    infoRulesItems: [
+      'Solo los administradores pueden gestionar categorías',
+      'Eliminar una categoría no elimina los productos asociados',
+      'El nombre de categoría debe ser único',
+      'Se recomienda usar nombres cortos y descriptivos',
+    ],
   },
   users: {
     title: 'Usuarios',

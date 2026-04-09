@@ -1,10 +1,9 @@
 import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { categoriesService } from '@/services/categories.service'
-import type { CategoryDto } from '@/types/api.types'
+import { extractError } from '@/utils/errors'
+import type { CategoryDto, CreateCategoryRequest, UpdateCategoryRequest } from '@/types/api.types'
 
 export function useCategories() {
-  const { t } = useI18n()
   const categories = ref<CategoryDto[]>([])
   const isLoading = ref(false)
   const error = ref<string | null>(null)
@@ -22,40 +21,31 @@ export function useCategories() {
     try {
       const response = await categoriesService.getAll()
       categories.value = response.data.data
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.loadCategories')
+    } catch (err) {
+      error.value = extractError(err)
     } finally {
       isLoading.value = false
     }
   }
 
-  async function createCategory(name: string, description?: string) {
+  async function createCategory(data: CreateCategoryRequest) {
     error.value = null
     try {
-      const response = await categoriesService.create({
-        name,
-        description: description || null,
-      })
-      const newId = response.data.data
+      await categoriesService.create(data)
       await fetchCategories()
-      return newId
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.createCategory')
+    } catch (err) {
+      error.value = extractError(err)
       throw err
     }
   }
 
-  async function updateCategory(id: number, name: string, description?: string) {
+  async function updateCategory(id: number, data: UpdateCategoryRequest) {
     error.value = null
     try {
-      await categoriesService.update(id, {
-        id,
-        name,
-        description: description || null,
-      })
+      await categoriesService.update(id, data)
       await fetchCategories()
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.updateCategory')
+    } catch (err) {
+      error.value = extractError(err)
       throw err
     }
   }
@@ -65,8 +55,8 @@ export function useCategories() {
     try {
       await categoriesService.delete(id)
       await fetchCategories()
-    } catch (err: any) {
-      error.value = err.response?.data?.message || t('errors.deleteCategory')
+    } catch (err) {
+      error.value = extractError(err)
       throw err
     }
   }

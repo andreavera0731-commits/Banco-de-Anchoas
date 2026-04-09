@@ -154,7 +154,50 @@ export default {
   },
   categories: {
     title: 'Categories',
-    placeholder: 'Category management will be displayed here.',
+    subtitle: 'Organize your products by grouping them into clear and functional categories.',
+    createCategory: 'Create category',
+    editCategory: 'Edit category',
+    deleteCategory: 'Delete category',
+    // Field labels
+    name: 'Name',
+    description: 'Description',
+    createdAt: 'Created at',
+    actions: 'Actions',
+    // Search & empty
+    search: 'Search categories...',
+    noCategories: 'No categories registered.',
+    noResults: 'No categories found.',
+    // Delete
+    confirmDelete: 'Are you sure you want to delete {name}?',
+    confirmDeleteDescription: 'Products associated with this category will be left unclassified.',
+    // Snackbar
+    createSuccess: 'Category created successfully.',
+    updateSuccess: 'Category updated successfully.',
+    deleteSuccess: 'Category deleted successfully.',
+    // Buttons
+    cancel: 'Cancel',
+    save: 'Save',
+    create: 'Create',
+    delete: 'Delete',
+    // Optional
+    optional: '(optional)',
+    // Info panel
+    infoTitle: 'How does it work?',
+    infoDescription: 'Categories allow you to classify and organize the products in your warehouse.',
+    infoHowTitle: 'Category management',
+    infoHowItems: [
+      'Create categories to group products by type or family',
+      'Edit the name or description at any time',
+      'Filter products by category on the products screen',
+      'Each product must belong to a category',
+    ],
+    infoRulesTitle: 'Important',
+    infoRulesItems: [
+      'Only administrators can manage categories',
+      'Deleting a category does not delete associated products',
+      'Category names must be unique',
+      'Short and descriptive names are recommended',
+    ],
   },
   users: {
     title: 'Users',
