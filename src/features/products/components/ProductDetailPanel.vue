@@ -1,13 +1,5 @@
 <template>
   <div class="detail-panel">
-    <!-- Header -->
-    <div class="d-flex align-center ga-2 mb-1">
-      <v-btn icon="mdi-close" size="x-small" variant="text" @click="$emit('close')" />
-      <span class="text-body-1 font-weight-bold" style="color: rgb(var(--v-theme-primary));">
-        {{ t('products.detailTitle') }}
-      </span>
-    </div>
-
     <!-- Loading -->
     <template v-if="loading">
       <v-skeleton-loader type="list-item-avatar, divider, list-item-three-line, divider, list-item-three-line" />
@@ -15,27 +7,25 @@
 
     <template v-else-if="product">
       <!-- Product identity -->
-      <div class="d-flex align-center ga-3 mb-4 mt-2">
+      <div class="d-flex align-center ga-3 mb-4">
         <v-avatar size="40" color="primary" variant="tonal">
           <v-icon icon="mdi-package-variant" size="22" />
         </v-avatar>
-        <div style="min-width: 0;">
+        <div style="min-width: 0; flex: 1;">
           <p class="text-body-1 font-weight-bold text-truncate">{{ product.name }}</p>
           <p class="text-caption text-medium-emphasis">{{ product.sku }} · {{ product.categoryName }}</p>
         </div>
+        <v-tooltip
+          v-if="product.stock <= product.minimumStock && product.minimumStock > 0"
+          :text="`${t('products.lowStockWarning')} — ${product.stock} / ${product.minimumStock} ${product.unit}`"
+          location="bottom"
+        >
+          <template #activator="{ props: tooltipProps }">
+            <v-icon v-bind="tooltipProps" icon="mdi-alert" color="warning" size="20" />
+          </template>
+        </v-tooltip>
+        <v-btn icon="mdi-close" size="x-small" variant="text" @click="$emit('close')" />
       </div>
-
-      <!-- Low stock alert -->
-      <v-alert
-        v-if="product.stock <= product.minimumStock && product.minimumStock > 0"
-        type="warning"
-        variant="tonal"
-        density="compact"
-        class="mb-4"
-        prepend-icon="mdi-alert"
-      >
-        {{ t('products.lowStockWarning') }} — {{ product.stock }} / {{ product.minimumStock }} {{ product.unit }}
-      </v-alert>
 
       <!-- General info -->
       <div class="detail-section mb-3">
@@ -122,8 +112,12 @@
         </div>
         <div class="detail-fields">
           <div class="detail-field">
+            <span class="text-caption text-medium-emphasis">{{ t('products.warehouse') }}</span>
+            <span class="text-caption">{{ warehouseName ?? t('products.noWarehouse') }}</span>
+          </div>
+          <div class="detail-field">
             <span class="text-caption text-medium-emphasis">{{ t('products.sector') }}</span>
-            <span class="text-caption">{{ product.defaultSectorId != null ? `#${product.defaultSectorId}` : t('products.noSector') }}</span>
+            <span class="text-caption">{{ sectorName ?? t('products.noSector') }}</span>
           </div>
           <div class="detail-field">
             <span class="text-caption text-medium-emphasis">{{ t('products.createdAt') }}</span>
@@ -165,11 +159,13 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import type { ProductDto } from '@/types/api.types'
+import { sectorsService } from '@/services/sectors.service'
 import { formatDate, formatDateTime, formatCurrency, getStockColor } from '@/utils/formatters'
 
-defineProps<{
+const props = defineProps<{
   product: ProductDto | null
   loading?: boolean
   showDelete?: boolean
@@ -182,6 +178,26 @@ defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+const warehouseName = ref<string | null>(null)
+const sectorName = ref<string | null>(null)
+
+watch(
+  () => props.product?.defaultSectorId,
+  async (sectorId) => {
+    warehouseName.value = null
+    sectorName.value = null
+    if (sectorId == null) return
+    try {
+      const res = await sectorsService.getById(sectorId)
+      warehouseName.value = res.data.data.warehouseName
+      sectorName.value = res.data.data.name
+    } catch {
+      // Non-critical — leave as null
+    }
+  },
+  { immediate: true },
+)
 </script>
 
 <style scoped>

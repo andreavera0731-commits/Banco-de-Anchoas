@@ -122,8 +122,8 @@ export default {
     noSupplier: 'Sin proveedor',
     noExpiration: 'Sin vencimiento',
     noSector: 'Sin sector asignado',
+    noWarehouse: 'Sin almacén asignado',
     lowStockWarning: 'Stock bajo',
-    detailTitle: 'Detalle del producto',
     // Optional field hints
     optional: '(opcional)',
     stockReadonly: 'El stock solo se modifica mediante movimientos.',
