@@ -63,6 +63,12 @@ export type UserRole = 'Admin' | 'Almacenista'
 
 export type ProductUnit = 'kg' | 'g' | 'un' | 'lt' | 'ml'
 
+export enum ReportFormat {
+  Csv = 0,
+  Excel = 1,
+  Pdf = 2,
+}
+
 // ============================================================
 // CATEGORÍAS
 // ============================================================
@@ -344,4 +350,18 @@ export interface UpdateRequesterRequest {
   id: number
   name: string
   description?: string | null
+}
+
+// ============================================================
+// REPORTES
+// ============================================================
+
+export interface ExportMovementsParams {
+  productId?: number
+  sectorId?: number
+  type?: MovementType
+  requesterId?: number
+  from?: string
+  to?: string
+  format?: ReportFormat
 }

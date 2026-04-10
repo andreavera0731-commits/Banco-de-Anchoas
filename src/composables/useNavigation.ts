@@ -16,6 +16,7 @@ export const navItems: readonly NavItem[] = [
   { route: 'categories', icon: 'mdi-tag-multiple-outline', titleKey: 'nav.categories', role: 'Admin' },
   { route: 'users', icon: 'mdi-account-group-outline', titleKey: 'nav.users', role: 'Admin' },
   { route: 'requesters', icon: 'mdi-account-arrow-right-outline', titleKey: 'nav.requesters', role: 'Admin' },
+  { route: 'reports', icon: 'mdi-file-chart-outline', titleKey: 'nav.reports', role: 'Admin' },
   { route: 'notifications', icon: 'mdi-bell-outline', titleKey: 'nav.notifications' },
 ]
 

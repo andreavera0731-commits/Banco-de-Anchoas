@@ -51,6 +51,7 @@ export default {
     users: 'Usuarios',
     notifications: 'Notificaciones',
     requesters: 'Solicitantes',
+    reports: 'Reportes',
   },
   products: {
     title: 'Productos',
@@ -437,6 +438,64 @@ export default {
       'El nombre del solicitante es obligatorio',
     ],
   },
+  reports: {
+    title: 'Reportes',
+    subtitle: 'Exporta movimientos de stock en distintos formatos con filtros personalizados.',
+    // Filters
+    filterProduct: 'Producto',
+    filterSector: 'Sector',
+    filterMovementType: 'Tipo de movimiento',
+    filterRequester: 'Solicitante',
+    filterDateFrom: 'Fecha inicio',
+    filterDateTo: 'Fecha fin',
+    allProducts: 'Todos los productos',
+    allSectors: 'Todos los sectores',
+    allTypes: 'Todos los tipos',
+    allRequesters: 'Todos los solicitantes',
+    // Export buttons
+    exportCsv: 'Exportar CSV',
+    exportExcel: 'Exportar Excel',
+    exportPdf: 'Exportar PDF',
+    exporting: 'Exportando...',
+    exportSuccess: 'Reporte exportado correctamente.',
+    // Info panel
+    infoTitle: '¿Cómo funcionan los reportes?',
+    infoDescription: 'Genera reportes de movimientos de stock aplicando filtros opcionales y descárgalos en el formato que prefieras.',
+    infoFormatsTitle: 'Formatos disponibles',
+    infoFormatsItems: [
+      'CSV — Ideal para importar a hojas de cálculo',
+      'Excel (.xlsx) — Listo para abrir en Excel con formato',
+      'PDF — Documento para imprimir o compartir',
+    ],
+    infoFiltersTitle: 'Filtros disponibles',
+    infoFiltersItems: [
+      'Filtra por producto, sector, tipo de movimiento o solicitante',
+      'Define un rango de fechas para acotar el período',
+      'Todos los filtros son opcionales — sin filtros se exportan los más recientes',
+    ],
+    infoRulesTitle: 'Importante',
+    infoRulesItems: [
+      'Solo los administradores pueden exportar reportes',
+      'Máximo 100.000 filas por exportación',
+      'El PDF muestra un subconjunto de columnas por espacio',
+    ],
+    // Preview table
+    search: 'Buscar en resultados...',
+    preview: 'Vista previa',
+    noMovements: 'No se encontraron movimientos con los filtros seleccionados.',
+    noResults: 'Sin resultados',
+    date: 'Fecha',
+    type: 'Tipo',
+    product: 'Producto',
+    quantity: 'Cantidad',
+    sector: 'Sector',
+    requester: 'Solicitante',
+    notes: 'Notas',
+    totalRecords: '{count} registro(s) encontrado(s)',
+    applyFilters: 'Aplicar filtros',
+    // Clear filters
+    clearFilters: 'Limpiar filtros',
+  },
   errors: {
     generic: 'Ha ocurrido un error inesperado',
     loadCategories: 'Error al cargar categorías',
@@ -478,6 +537,7 @@ export default {
     createRequester: 'Error al crear solicitante',
     updateRequester: 'Error al actualizar solicitante',
     deleteRequester: 'Error al eliminar solicitante',
+    exportReport: 'Error al exportar reporte',
   },
   enums: {
     movementType: {

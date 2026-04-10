@@ -51,6 +51,7 @@ export default {
     users: 'Users',
     notifications: 'Notifications',
     requesters: 'Requesters',
+    reports: 'Reports',
   },
   products: {
     title: 'Products',
@@ -437,6 +438,64 @@ export default {
       'The requester name is required',
     ],
   },
+  reports: {
+    title: 'Reports',
+    subtitle: 'Export stock movements in various formats with custom filters.',
+    // Filters
+    filterProduct: 'Product',
+    filterSector: 'Sector',
+    filterMovementType: 'Movement type',
+    filterRequester: 'Requester',
+    filterDateFrom: 'Start date',
+    filterDateTo: 'End date',
+    allProducts: 'All products',
+    allSectors: 'All sectors',
+    allTypes: 'All types',
+    allRequesters: 'All requesters',
+    // Export buttons
+    exportCsv: 'Export CSV',
+    exportExcel: 'Export Excel',
+    exportPdf: 'Export PDF',
+    exporting: 'Exporting...',
+    exportSuccess: 'Report exported successfully.',
+    // Info panel
+    infoTitle: 'How do reports work?',
+    infoDescription: 'Generate stock movement reports by applying optional filters and download them in your preferred format.',
+    infoFormatsTitle: 'Available formats',
+    infoFormatsItems: [
+      'CSV — Ideal for importing to spreadsheets',
+      'Excel (.xlsx) — Ready to open in Excel with formatting',
+      'PDF — Document for printing or sharing',
+    ],
+    infoFiltersTitle: 'Available filters',
+    infoFiltersItems: [
+      'Filter by product, sector, movement type, or requester',
+      'Define a date range to narrow the period',
+      'All filters are optional — without filters, the most recent are exported',
+    ],
+    infoRulesTitle: 'Important',
+    infoRulesItems: [
+      'Only administrators can export reports',
+      'Maximum 100,000 rows per export',
+      'PDF shows a subset of columns due to space',
+    ],
+    // Preview table
+    search: 'Search in results...',
+    preview: 'Preview',
+    noMovements: 'No movements found with the selected filters.',
+    noResults: 'No results',
+    date: 'Date',
+    type: 'Type',
+    product: 'Product',
+    quantity: 'Quantity',
+    sector: 'Sector',
+    requester: 'Requester',
+    notes: 'Notes',
+    totalRecords: '{count} record(s) found',
+    applyFilters: 'Apply filters',
+    // Clear filters
+    clearFilters: 'Clear filters',
+  },
   errors: {
     generic: 'An unexpected error occurred',
     loadCategories: 'Error loading categories',
@@ -478,6 +537,7 @@ export default {
     createRequester: 'Error creating requester',
     updateRequester: 'Error updating requester',
     deleteRequester: 'Error deleting requester',
+    exportReport: 'Error exporting report',
   },
   enums: {
     movementType: {
