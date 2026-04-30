@@ -384,7 +384,50 @@ export default {
   },
   notifications: {
     title: 'Notifications',
+    subtitle: 'Review and manage system alerts about low stock and expirations.',
+    // Search & filters
+    search: 'Search notifications...',
+    filterAll: 'All',
+    filterUnread: 'Unread',
+    filterRead: 'Read',
+    // Counters
+    unreadCount: '{count} unread',
+    noUnread: 'All read',
+    // Actions
+    markAsRead: 'Mark as read',
+    markAllAsRead: 'Mark all as read',
+    markAsReadSuccess: 'Notification marked as read.',
+    markAllAsReadSuccess: 'All notifications marked as read.',
+    // Table headers
+    date: 'Date',
+    type: 'Type',
+    title2: 'Title',
+    message: 'Message',
+    status: 'Status',
+    actions: 'Actions',
+    // Status chips
+    read: 'Read',
+    unread: 'Unread',
+    // Empty
+    noNotifications: 'You have no notifications.',
+    noResults: 'No results.',
     placeholder: 'Notifications will be displayed here.',
+    // Info panel
+    infoTitle: 'How do notifications work?',
+    infoDescription: 'The system generates automatic alerts when it detects situations that require your attention.',
+    infoTypesTitle: 'Notification types',
+    infoTypesItems: [
+      'Low stock: a product is below its minimum stock level',
+      'Expiring soon: product close to its expiration date',
+      'Expired: product past its expiration date',
+    ],
+    infoRulesTitle: 'Best practices',
+    infoRulesItems: [
+      'Review notifications daily to keep inventory up to date',
+      'Mark as read those you have already addressed',
+      'New notifications appear first',
+      'Expirations require immediate action to avoid losses',
+    ],
   },
   notFound: {
     message: 'The page you are looking for does not exist.',

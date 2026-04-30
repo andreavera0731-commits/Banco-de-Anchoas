@@ -384,7 +384,50 @@ export default {
   },
   notifications: {
     title: 'Notificaciones',
+    subtitle: 'Consulta y gestiona las alertas del sistema sobre stock bajo y vencimientos.',
+    // Search & filters
+    search: 'Buscar notificaciones...',
+    filterAll: 'Todas',
+    filterUnread: 'No leídas',
+    filterRead: 'Leídas',
+    // Counters
+    unreadCount: '{count} sin leer',
+    noUnread: 'Todas leídas',
+    // Actions
+    markAsRead: 'Marcar como leída',
+    markAllAsRead: 'Marcar todas como leídas',
+    markAsReadSuccess: 'Notificación marcada como leída.',
+    markAllAsReadSuccess: 'Todas las notificaciones se marcaron como leídas.',
+    // Table headers
+    date: 'Fecha',
+    type: 'Tipo',
+    title2: 'Título',
+    message: 'Mensaje',
+    status: 'Estado',
+    actions: 'Acciones',
+    // Status chips
+    read: 'Leída',
+    unread: 'No leída',
+    // Empty
+    noNotifications: 'No tienes notificaciones.',
+    noResults: 'Sin resultados.',
     placeholder: 'Las notificaciones se mostrarán aquí.',
+    // Info panel
+    infoTitle: '¿Cómo funcionan las notificaciones?',
+    infoDescription: 'El sistema genera alertas automáticas cuando detecta situaciones que requieren tu atención.',
+    infoTypesTitle: 'Tipos de notificaciones',
+    infoTypesItems: [
+      'Stock bajo: un producto está por debajo de su stock mínimo',
+      'Próximo a vencer: producto cerca de su fecha de caducidad',
+      'Vencido: producto que ya superó su fecha de vencimiento',
+    ],
+    infoRulesTitle: 'Buenas prácticas',
+    infoRulesItems: [
+      'Revisa las notificaciones diariamente para mantener el inventario al día',
+      'Marca como leídas las que ya hayas atendido',
+      'Las notificaciones nuevas aparecen primero',
+      'Los vencimientos requieren acción inmediata para evitar pérdidas',
+    ],
   },
   notFound: {
     message: 'La página que buscas no existe.',
