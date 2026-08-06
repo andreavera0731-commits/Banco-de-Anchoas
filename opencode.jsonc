@@ -1,0 +1,17 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+
+  // Sin bloque "permission" a propósito: se hereda el config global
+  // (~/.config/opencode/opencode.json) con sus reglas finas de bash y read.
+
+  "references": {
+    "planning": {
+      "path": "../anchoita-project",
+      "description": "Especificaciones, criterios de aceptación, decisiones y avance del proyecto Anchoita."
+    },
+    "backend": {
+      "path": "../BancoAnchoas.API",
+      "description": "Backend .NET 10 y contrato API que consume el frontend. Consultar para OpenAPI, códigos de error y documentación de arquitectura."
+    }
+  }
+}
